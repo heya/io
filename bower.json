@@ -1,0 +1,26 @@
+{
+  "name": "heya-io",
+  "description": "Intelligent I/O for browsers, and its counterpart for node.js.",
+  "main": "io.js",
+  "authors": [
+    "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://www.lazutkin.com/)"
+  ],
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "I/O",
+    "XHR"
+  ],
+  "homepage": "https://github.com/heya/io",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
