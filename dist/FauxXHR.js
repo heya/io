@@ -1,4 +1,5 @@
-define([], function () {
+(function(_,f,g){g=window;g=g.heya||(g.heya={});g=g.io||(g.io={});g.FauxXHR=f();})
+([], function () {
 	'use strict';
 
 	// Faux XHR stand-in to provide a placeholder for cached data

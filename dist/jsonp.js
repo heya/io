@@ -1,7 +1,9 @@
-define(['./io'], function (io) {
+(function(_,f){window.heya.io.jsonp=f(window.heya.io);})
+(['./io'], function (io) {
 	'use strict';
 
 	// JSONP handler
+	// depends on: io.js
 
 	var counter = 0;
 

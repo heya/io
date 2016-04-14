@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "phantomjs tests/phantom.js"
+    "test": "phantomjs tests/phantom.js",
+    "dist": "node node_modules/heya-globalize/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,12 +16,28 @@
   },
   "keywords": [
     "I/O",
-    "XHR"
+    "XHR",
+    "IO"
   ],
   "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://www.lazutkin.com/)",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/heya/io/issues"
   },
-  "homepage": "https://github.com/heya/io#readme"
+  "homepage": "https://github.com/heya/io#readme",
+  "devDependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "heya-globalize": "^1.0.3",
+    "heya-unit": "^0.3.0"
+  },
+  "dependencies": {
+    "heya-async": "^1.0.0",
+    "request": "^2.71.0"
+  },
+  "browserGlobals": {
+    "!root": "heya.io",
+    "./io": "heya.io",
+    "./bundle": "!heya.io"
+  }
 }

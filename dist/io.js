@@ -1,4 +1,5 @@
-define([], function () {
+(function(_,f,g){g=window;g=g.heya||(g.heya={});g.io=f();})
+([], function () {
 	'use strict';
 
 	// the I/O powerhouse
@@ -243,7 +244,7 @@ define([], function () {
 	io.FailedIO  = FailedIO;
 	io.TimedOut  = TimedOut;
 	io.BadStatus = BadStatus;
-	io.Deferred  = io.FauxDeferred = FauxDeferred;
+	io.Deferred  = FauxDeferred;
 
 	io.makeQuery = makeQuery;
 	io.buildUrl  = buildUrl;

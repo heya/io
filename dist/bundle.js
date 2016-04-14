@@ -1,4 +1,5 @@
-define(['./io', './FauxXHR'], function (io, FauxXHR) {
+(function(_,f){window.heya.io.bundle=f(window.heya.io,window.heya.io.FauxXHR);})
+(['./io', './FauxXHR'], function (io, FauxXHR) {
 	'use strict';
 
 	// cache and bundler for I/O
@@ -305,7 +306,7 @@ define(['./io', './FauxXHR'], function (io, FauxXHR) {
 	}
 
 
-	io.bundle = {
+	return {
 		// defaults
 		defaultCache:  defaultOptIn,
 		defaultBundle: defaultOptIn,
@@ -340,6 +341,4 @@ define(['./io', './FauxXHR'], function (io, FauxXHR) {
 		submitWithRelated: submitWithRelated,
 		fly:      fly
 	};
-
-	return io;
 });
