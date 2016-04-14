@@ -1,11 +1,12 @@
 define(['module', 'heya-unit', '../io', 'heya-async/Deferred', '../bundle'], function (module, unit, io, Deferred) {
 	'use strict';
 
-	io.Deferred = Deferred;
-	io.bundle.attach();
-	io.bundle.minSize = io.bundle.maxSize = 1;
-
 	unit.add(module, [
+		function test_setup () {
+			io.Deferred = Deferred;
+			io.bundle.attach();
+			io.bundle.minSize = io.bundle.maxSize = 1;
+		},
 		function test_simple_io (t) {
 			var x = t.startAsync();
 			io('http://localhost:3000/api').then(function (data) {
@@ -93,7 +94,8 @@ define(['module', 'heya-unit', '../io', 'heya-async/Deferred', '../bundle'], fun
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
-				mime: 'text/plain'
+				mime: 'text/plain',
+				cache: false
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('typeof data == "string"'));
 				eval(t.TEST('data == "<div>Hello, world!</div>"'));
@@ -104,7 +106,8 @@ define(['module', 'heya-unit', '../io', 'heya-async/Deferred', '../bundle'], fun
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
-				responseType: 'text'
+				responseType: 'text',
+				cache: false
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('typeof data == "string"'));
 				eval(t.TEST('data == "<div>Hello, world!</div>"'));
@@ -116,7 +119,8 @@ define(['module', 'heya-unit', '../io', 'heya-async/Deferred', '../bundle'], fun
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
-				responseType: 'blob'
+				responseType: 'blob',
+				cache: false
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof Blob'));
 				x.done();
@@ -127,11 +131,16 @@ define(['module', 'heya-unit', '../io', 'heya-async/Deferred', '../bundle'], fun
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
-				responseType: 'arraybuffer'
+				responseType: 'arraybuffer',
+				cache: false
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof ArrayBuffer'));
 				x.done();
 			});
+		},
+		function test_teardown () {
+			io.bundle.detach();
+			io.Deferred = io.FauxDeferred;
 		}
 	]);
 
