@@ -1,9 +1,10 @@
 define(['module', 'heya-unit', '../io', 'heya-async/Deferred'], function (module, unit, io, Deferred) {
 	'use strict';
 
-	io.Deferred = Deferred;
-
 	unit.add(module, [
+		function test_setup () {
+			io.Deferred = Deferred;
+		},
 		function test_exist (t) {
 			eval(t.TEST('typeof io == "function"'));
 			eval(t.TEST('typeof io.get == "function"'));
@@ -139,6 +140,9 @@ define(['module', 'heya-unit', '../io', 'heya-async/Deferred'], function (module
 				eval(t.TEST('data instanceof ArrayBuffer'));
 				x.done();
 			});
+		},
+		function test_teardownp () {
+			io.Deferred = io.FauxDeferred;
 		}
 	]);
 

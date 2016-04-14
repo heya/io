@@ -3,8 +3,6 @@ define(['module', 'heya-unit', '../io'], function (module, unit, io) {
 
 	if (typeof Promise == 'undefined') return;
 
-	io.Deferred = io.FauxDeferred;
-
 	unit.add(module, [
 		function test_exist (t) {
 			eval(t.TEST('typeof io == "function"'));

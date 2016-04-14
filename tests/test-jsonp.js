@@ -1,9 +1,10 @@
 define(['module', 'heya-unit', '../io', '../jsonp', 'heya-async/Deferred'], function (module, unit, io, jsonp, Deferred) {
 	'use strict';
 
-	io.Deferred = Deferred;
-
 	unit.add(module, [
+		function test_setup () {
+			io.Deferred = Deferred;
+		},
 		function test_exist (t) {
 			eval(t.TEST('typeof jsonp == "function"'));
 		},
@@ -32,6 +33,9 @@ define(['module', 'heya-unit', '../io', '../jsonp', 'heya-async/Deferred'], func
 				eval(t.TEST('data.xhr === null'));
 				x.done();
 			});
+		},
+		function test_teardownp () {
+			io.Deferred = io.FauxDeferred;
 		}
 	]);
 
