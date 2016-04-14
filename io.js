@@ -23,8 +23,8 @@ define([], function () {
 	}
 	if (typeof Promise != 'undefined') {
 		FauxDeferred.Promise = Promise;
-		FauxDeferred.resolve = Promise.resolve;
-		FauxDeferred.reject  = Promise.reject;
+		FauxDeferred.resolve = function (value) { return Promise.resolve(value); };
+		FauxDeferred.reject  = function (value) { return Promise.reject(value); };
 	}
 
 	function dictToPairs (dict, processPair) {
@@ -102,13 +102,15 @@ define([], function () {
 		xhr.ontimeout = function (event) {
 			d.reject(new TimedOut(xhr, options, event));
 		};
-		xhr.onprogress = function (event) {
-			d.progress({xhr: xhr, options: options, event: event, upload: false});
-		};
-		if (xhr.upload) {
-			xhr.upload.onprogress = function (event) {
-				d.progress({xhr: xhr, options: options, event: event, upload: true});
+		if (typeof d.progress == 'function') {
+			xhr.onprogress = function (event) {
+				d.progress({xhr: xhr, options: options, event: event, upload: false});
 			};
+			if (xhr.upload) {
+				xhr.upload.onprogress = function (event) {
+					d.progress({xhr: xhr, options: options, event: event, upload: true});
+				};
+			}
 		}
 		// build a URL
 		var url = io.buildUrl(options);
