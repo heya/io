@@ -1,4 +1,4 @@
-define(['module', 'heya-unit', 'heya-request'], function (module, unit, io) {
+define(['module', 'heya-unit', 'heya-io'], function (module, unit, io) {
 	'use strict';
 
 	if (typeof Promise == 'undefined') return;
