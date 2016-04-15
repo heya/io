@@ -1,4 +1,4 @@
-define(['./io'], function (io) {
+define(['./main'], function (io) {
 	'use strict';
 
 	// JSONP handler

@@ -5,7 +5,7 @@ var debug = require('debug')('heya-io:server');
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var bundler = require('./lib/bundler');
+var bundler = require('./index');
 
 // The APP
 

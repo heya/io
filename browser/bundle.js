@@ -1,4 +1,4 @@
-define(['./io', './FauxXHR'], function (io, FauxXHR) {
+define(['./main', './FauxXHR'], function (io, FauxXHR) {
 	'use strict';
 
 	// cache and bundler for I/O

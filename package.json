@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "phantomjs tests/phantom.js",
+    "test": "node_modules/.bin/phantomjs tests/phantom.js",
     "dist": "node node_modules/heya-globalize/index.js"
   },
   "repository": {
@@ -33,11 +33,13 @@
   },
   "dependencies": {
     "heya-async": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.7",
     "request": "^2.71.0"
   },
   "browserGlobals": {
+    "!from": "browser/",
     "!root": "heya.io",
-    "./io": "heya.io",
-    "./bundle": "!heya.io"
+    "./browser/io": "heya.io",
+    "./browser/bundle": "!heya.io"
   }
 }
