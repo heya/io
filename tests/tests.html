@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>heya-defer test runner</title>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/1.2.4/es5-shim.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
+		<script>
+			require.config({
+				baseUrl: ".",
+				packages: [
+					{name: "heya-unit",
+					location: "../node_modules/heya-unit"},
+					{name: "heya-ice",
+					location: "../node_modules/heya-ice"},
+					{name: "heya-unify",
+					location: "../node_modules/heya-unify"},
+					{name: "heya-async",
+					location: "../node_modules/heya-async"}
+				],
+				paths: {
+					"domReady": "http://cdnjs.cloudflare.com/ajax/libs/require-domReady/2.0.1/domReady.min"
+				}
+			});
+			require(["require", "./tests", "domReady!"], function(require){
+				var test = require("./tests");
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

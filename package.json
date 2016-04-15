@@ -1,0 +1,43 @@
+{
+  "name": "heya-io",
+  "version": "1.0.0",
+  "description": "Intelligent I/O for browsers, and its counterpart for node.js.",
+  "main": "io.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "phantomjs tests/phantom.js",
+    "dist": "node node_modules/heya-globalize/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/heya/io.git"
+  },
+  "keywords": [
+    "I/O",
+    "XHR",
+    "IO"
+  ],
+  "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://www.lazutkin.com/)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/heya/io/issues"
+  },
+  "homepage": "https://github.com/heya/io#readme",
+  "devDependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "heya-globalize": "^1.0.3",
+    "heya-unit": "^0.3.0"
+  },
+  "dependencies": {
+    "heya-async": "^1.0.0",
+    "request": "^2.71.0"
+  },
+  "browserGlobals": {
+    "!root": "heya.io",
+    "./io": "heya.io",
+    "./bundle": "!heya.io"
+  }
+}
