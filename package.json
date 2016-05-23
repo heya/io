@@ -1,7 +1,7 @@
 {
   "name": "heya-io",
   "version": "1.0.0",
-  "description": "Intelligent I/O for browsers, and its counterpart for node.js.",
+  "description": "Intelligent I/O for browsers.",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -37,7 +37,6 @@
     "request": "^2.71.0"
   },
   "browserGlobals": {
-    "!from": "browser/",
     "!root": "heya.io",
     "./io": "heya.io",
     "./bundle": "!heya.io"

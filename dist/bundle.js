@@ -1,5 +1,5 @@
-(function(_,f){window.heya.io.bundle=f(window.heya.io,window.heya.io.FauxXHR);})
-(['./io', './FauxXHR'], function (io, FauxXHR) {
+(function(_,f){f(window.heya.io.main,window.heya.io.FauxXHR);})
+(['./main', './FauxXHR'], function (io, FauxXHR) {
 	'use strict';
 
 	// cache and bundler for I/O
@@ -306,7 +306,7 @@
 	}
 
 
-	return {
+	io.bundle = {
 		// defaults
 		defaultCache:  defaultOptIn,
 		defaultBundle: defaultOptIn,
@@ -341,4 +341,6 @@
 		submitWithRelated: submitWithRelated,
 		fly:      fly
 	};
+
+	return io;
 });

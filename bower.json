@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "description": "Intelligent I/O for browsers, and its counterpart for node.js.",
+  "description": "Intelligent I/O for browsers.",
   "main": "io.js",
   "authors": [
     "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://www.lazutkin.com/)"

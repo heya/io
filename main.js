@@ -1,5 +1,4 @@
-(function(_,f,g){g=window;g=g.heya||(g.heya={});g.io=f();})
-([], function () {
+define([], function () {
 	'use strict';
 
 	// the I/O powerhouse
@@ -24,8 +23,8 @@
 	}
 	if (typeof Promise != 'undefined') {
 		FauxDeferred.Promise = Promise;
-		FauxDeferred.resolve = Promise.resolve;
-		FauxDeferred.reject  = Promise.reject;
+		FauxDeferred.resolve = function (value) { return Promise.resolve(value); };
+		FauxDeferred.reject  = function (value) { return Promise.reject(value); };
 	}
 
 	function dictToPairs (dict, processPair) {
@@ -103,13 +102,15 @@
 		xhr.ontimeout = function (event) {
 			d.reject(new TimedOut(xhr, options, event));
 		};
-		xhr.onprogress = function (event) {
-			d.progress({xhr: xhr, options: options, event: event, upload: false});
-		};
-		if (xhr.upload) {
-			xhr.upload.onprogress = function (event) {
-				d.progress({xhr: xhr, options: options, event: event, upload: true});
+		if (typeof d.progress == 'function') {
+			xhr.onprogress = function (event) {
+				d.progress({xhr: xhr, options: options, event: event, upload: false});
 			};
+			if (xhr.upload) {
+				xhr.upload.onprogress = function (event) {
+					d.progress({xhr: xhr, options: options, event: event, upload: true});
+				};
+			}
 		}
 		// build a URL
 		var url = io.buildUrl(options);
@@ -172,6 +173,13 @@
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
 			return io.Deferred.reject(new BadStatus(result.xhr, result.options, result.event));
 		}
+		if (result.options.returnXHR) {
+			return result.xhr;
+		}
+		if (result.xhr.status === 204 || (result.options.method && result.options.method.toUpperCase() === 'HEAD')) {
+			// no body was sent
+			return; // return undefined
+		}
 		if (result.xhr.responseType) {
 			return result.xhr.response;
 		}
@@ -203,6 +211,7 @@
 		// options.wait? - a Boolean flag to indicate our interest in a request without initiating it. Default: false.
 		// options.cache? - a Boolean flag to opt-in/out in caching. Default: as set in io.bundle.defaultOptIn.
 		// options.bundle? - a Boolean flag to opt-in/out of bundling. Default: as set in io.bundle.defaultOptIn.
+		// options.returnXHR -  a Boolean flag to return an XHR object instead of a decoded data.
 		// options.processSuccess - a function to extract a value for a successful I/O. Default: io.processSuccess.
 		// options.processFailure - a function to extract a value for a failed I/O. Default: io.processFailure.
 
@@ -236,7 +245,7 @@
 		};
 	}
 
-	['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(makeVerb);
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(makeVerb);
 	io.remove = io['delete']; // alias for simplicity
 
 	// export
@@ -244,7 +253,7 @@
 	io.FailedIO  = FailedIO;
 	io.TimedOut  = TimedOut;
 	io.BadStatus = BadStatus;
-	io.Deferred  = FauxDeferred;
+	io.Deferred  = io.FauxDeferred = FauxDeferred;
 
 	io.makeQuery = makeQuery;
 	io.buildUrl  = buildUrl;

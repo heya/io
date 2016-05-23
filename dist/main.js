@@ -1,4 +1,5 @@
-define([], function () {
+(function(_,f,g){g=window;g=g.heya||(g.heya={});g=g.io||(g.io={});g.main=f();})
+([], function () {
 	'use strict';
 
 	// the I/O powerhouse
@@ -173,6 +174,13 @@ define([], function () {
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
 			return io.Deferred.reject(new BadStatus(result.xhr, result.options, result.event));
 		}
+		if (result.options.returnXHR) {
+			return result.xhr;
+		}
+		if (result.xhr.status === 204 || (result.options.method && result.options.method.toUpperCase() === 'HEAD')) {
+			// no body was sent
+			return; // return undefined
+		}
 		if (result.xhr.responseType) {
 			return result.xhr.response;
 		}
@@ -204,6 +212,7 @@ define([], function () {
 		// options.wait? - a Boolean flag to indicate our interest in a request without initiating it. Default: false.
 		// options.cache? - a Boolean flag to opt-in/out in caching. Default: as set in io.bundle.defaultOptIn.
 		// options.bundle? - a Boolean flag to opt-in/out of bundling. Default: as set in io.bundle.defaultOptIn.
+		// options.returnXHR -  a Boolean flag to return an XHR object instead of a decoded data.
 		// options.processSuccess - a function to extract a value for a successful I/O. Default: io.processSuccess.
 		// options.processFailure - a function to extract a value for a failed I/O. Default: io.processFailure.
 
@@ -237,7 +246,7 @@ define([], function () {
 		};
 	}
 
-	['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(makeVerb);
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(makeVerb);
 	io.remove = io['delete']; // alias for simplicity
 
 	// export
