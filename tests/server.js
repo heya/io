@@ -1,6 +1,7 @@
 'use strict';
 
 var http = require('http');
+var path = require('path');
 var debug = require('debug')('heya-io:server');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -13,7 +14,7 @@ var app = express();
 
 // add middleware
 app.use(bodyParser.raw({type: '*/*'}));
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '..')));
 
 app.all('/api', function (req, res) {
 	if (req.query.status) {
