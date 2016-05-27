@@ -1,14 +1,11 @@
 define(['./main'], function (io) {
 	'use strict';
 
-	// JSONP handler
+	// script handler
 
-	var counter = 0;
-
-	function load (options, data) {
-		options = io.processOptions(typeof options == 'string' ? {url: options} : options);
+	function loadRequest (options) {
 		var url = options.url,
-			query = options.query || options.data || data || {},
+			query = options.query || options.data,
 			script = document.createElement('script'),
 			deferred = new io.Deferred();
 		script.onload = function () {
@@ -17,10 +14,12 @@ define(['./main'], function (io) {
 		script.onerror = function (e) {
 			deferred.reject(new io.FailedIO(null, options, e));
 		};
-		script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + io.makeQuery(query);
+		script.src = query ? url + (url.indexOf('?') >= 0 ? '&' : '?') + io.makeQuery(query) : url;
 		document.documentElement.appendChild(script);
-		return (deferred.promise || deferred).catch(options.processFailure || io.processFailure);
+		return deferred.promise || deferred;
 	}
 
-	return load;
+	io.services.__load = loadRequest;
+
+	return io.makeVerb('__load');
 });

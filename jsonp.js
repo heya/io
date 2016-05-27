@@ -5,10 +5,9 @@ define(['./main'], function (io) {
 
 	var counter = 0;
 
-	function jsonp (options, data) {
-		options = io.processOptions(typeof options == 'string' ? {url: options} : options);
+	function jsonpRequest (options) {
 		var url = options.url,
-			query = options.query || options.data || data,
+			query = options.query || options.data,
 			callback = options.callback || 'callback',
 			name = '__io_jsonp_callback_' + (counter++),
 			script = document.createElement('script'),
@@ -27,8 +26,10 @@ define(['./main'], function (io) {
 		};
 		script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + io.makeQuery(query);
 		document.documentElement.appendChild(script);
-		return (deferred.promise || deferred).catch(options.processFailure || io.processFailure);
+		return deferred.promise || deferred;
 	}
 
-	return jsonp;
+	io.services.__jsonp = jsonpRequest;
+
+	return io.makeVerb('__jsonp');
 });

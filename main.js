@@ -3,7 +3,9 @@ define([], function () {
 
 	// the I/O powerhouse
 
-	function FailedIO (xhr, options, event) { this.xhr = xhr; this.options = options; this.event = event; }
+	function Result (xhr, options, event) { this.xhr = xhr; this.options = options; this.event = event; }
+	function FailedIO () { Result.apply(this, arguments); }
+	FailedIO.prototype = Object.create(Result.prototype);
 	function TimedOut () { FailedIO.apply(this, arguments); }
 	TimedOut.prototype = Object.create(FailedIO.prototype);
 	function BadStatus () { FailedIO.apply(this, arguments); }
@@ -86,7 +88,7 @@ define([], function () {
 		},
 		whiteListedProps = Object.keys(propHandlers);
 
-	function request (options) {
+	function xhrRequest (options) {
 		var xhr = new XMLHttpRequest(),
 			d = new io.Deferred(function () {
 				// canceller
@@ -94,13 +96,13 @@ define([], function () {
 			});
 		// add event listeners
 		xhr.onload = function (event) {
-			d.resolve({xhr: xhr, options: options, event: event});
+			d.resolve(new io.Result(xhr, options, event));
 		};
 		xhr.onerror = function (event) {
-			d.reject(new FailedIO(xhr, options, event));
+			d.reject(new io.FailedIO(xhr, options, event));
 		};
 		xhr.ontimeout = function (event) {
-			d.reject(new TimedOut(xhr, options, event));
+			d.reject(new io.TimedOut(xhr, options, event));
 		};
 		if (typeof d.progress == 'function') {
 			xhr.onprogress = function (event) {
@@ -227,15 +229,25 @@ define([], function () {
 
 		options = io.processOptions(options);
 
-		return io.request(options).
-			then(options.processSuccess || io.processSuccess).
-			catch(options.processFailure || io.processFailure);
+		return io.request(options).then(function (result) {
+			return result instanceof io.Result ? (options.processSuccess || io.processSuccess)(result) : result;
+		}).catch(options.processFailure || io.processFailure);
+	}
+
+	function request (options) {
+		if (options.method) {
+			var service = io.services[options.method];
+			if (service) {
+				return service(options);
+			}
+		}
+		return xhrRequest(options);
 	}
 
 	// convenience methods
 
 	function makeVerb (verb) {
-		io[verb.toLowerCase()] = function (url, data) {
+		return function (url, data) {
 			var options = typeof url == 'string' ? {url: url} : Object.create(url);
 			options.method = verb;
 			if (data) {
@@ -245,11 +257,16 @@ define([], function () {
 		};
 	}
 
-	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(makeVerb);
+	function registerVerb (verb) {
+		io[verb.toLowerCase()] = makeVerb(verb);
+	}
+
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(registerVerb);
 	io.remove = io['delete']; // alias for simplicity
 
 	// export
 
+	io.Result    = Result;
 	io.FailedIO  = FailedIO;
 	io.TimedOut  = TimedOut;
 	io.BadStatus = BadStatus;
@@ -262,7 +279,10 @@ define([], function () {
 	io.processSuccess = processSuccess;
 	io.processFailure = processFailure;
 	io.processData = processData;
-	io.request = request;
+	io.request  = request;
+
+	io.services = {};
+	io.makeVerb = makeVerb;
 
 	return io;
 });
