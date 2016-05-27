@@ -46,11 +46,7 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 		if (canCache) {
 			var data = io.bundle.cache.retrieve(key);
 			if (typeof data !== 'undefined') {
-				return io.Deferred.resolve({
-					xhr: new FauxXHR(data),
-					options: options,
-					event: null
-				});
+				return io.Deferred.resolve(new io.Result(new FauxXHR(data), options, null));
 			}
 		}
 		// check if in flight
@@ -89,7 +85,7 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 		}
 		// the default
 		promise = flyRequest(key, canCache);
-		ioRequest(options).done(resolved[key]);
+		ioRequest(options).then(resolved[key]); // TODO: Deferred-specific???
 		return promise;
 	}
 
@@ -106,7 +102,7 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 	}
 
 	function addToCache (promise) {
-		promise.done(function (result) {
+		promise.then(function (result) {
 			var xhr = result.xhr;
 			if (xhr.status >= 200 && xhr.status < 300) {
 				saveToCache(io.bundle.makeKey(result.options), xhr);
@@ -150,7 +146,7 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 
 	function sendRequest (options) {
 		var key = io.bundle.makeKey(options);
-		ioRequest(options).done(resolved[key]);
+		ioRequest(options).then(resolved[key]);
 	}
 
 	function sendBundle (bundle) {
@@ -192,7 +188,7 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 					xhr = new FauxXHR(result.response),
 					value = resolved[key];
 				if (value) {
-					value.resolve({xhr: xhr, options: result.options, event: null});
+					value.resolve(new io.Result(xhr, result.options, null));
 				} else {
 					saveToCache(key, xhr);
 				}
