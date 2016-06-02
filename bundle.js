@@ -85,7 +85,8 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 		}
 		// the default
 		promise = flyRequest(key, canCache);
-		ioRequest(options).then(resolved[key]); // TODO: Deferred-specific???
+		var deferred = resolved[key];
+		ioRequest(options).then(deferred.resolve.bind(deferred), deferred.reject.bind(deferred));
 		return promise;
 	}
 
@@ -119,13 +120,14 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 			if (canCache) {
 				addToCache(promise);
 			}
-			promise.doneBoth(function () {
-				delete flying[key];
-				delete resolved[key];
-			});
+			promise.then(cleanUp, cleanUp);
 		}
 		flying[key] = true;
 		return deferred.promise || deferred;
+		function cleanUp () {
+			delete flying[key];
+			delete resolved[key];
+		}
 	}
 
 	function gather () {
@@ -145,8 +147,9 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 	}
 
 	function sendRequest (options) {
-		var key = io.bundle.makeKey(options);
-		ioRequest(options).then(resolved[key]);
+		var key = io.bundle.makeKey(options),
+			deferred = resolved[key];
+		ioRequest(options).then(deferred.resolve.bind(deferred), deferred.reject.bind(deferred));
 	}
 
 	function sendBundle (bundle) {
@@ -197,7 +200,8 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 	}
 
 	function detect (data) {
-		return data && typeof data == 'object' && data.bundle === 'bundle' && data.results instanceof Array ? data.results : null;
+		return data && typeof data == 'object' && data.bundle === 'bundle' &&
+			data.results instanceof Array ? data.results : null;
 	}
 
 
