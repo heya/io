@@ -172,6 +172,9 @@ define([], function () {
 	}
 
 	function processSuccess (result) {
+		if (!(result.xhr instanceof XMLHttpRequest || io.FauxXHR && result.xhr instanceof io.FauxXHR)) {
+			return result;
+		}
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
 			return io.Deferred.reject(new BadStatus(result.xhr, result.options, result.event));
 		}
@@ -219,7 +222,7 @@ define([], function () {
 
 		switch (typeof options) {
 			case 'string':
-				options = {url: options};
+				options = {url: options, method: 'GET'};
 				break;
 			case 'object':
 				break;
@@ -229,19 +232,42 @@ define([], function () {
 
 		options = io.processOptions(options);
 
-		return io.request(options).then(function (result) {
-			return result instanceof io.Result ? (options.processSuccess || io.processSuccess)(result) : result;
-		}).catch(options.processFailure || io.processFailure);
+		return io.request(options).
+			then(options.processSuccess || io.processSuccess).
+			catch(options.processFailure || io.processFailure);
 	}
 
-	function request (options) {
-		if (options.method) {
-			var service = io.services[options.method];
-			if (service) {
-				return service(options);
+	// services
+
+	var services = [];
+
+	function addService (service) {
+		io.removeService(service.name);
+		services.push(service);
+		services.sort(function (a, b) { return a.priority - b.priority; });
+	}
+
+	function removeService (name) {
+		for (var i = 0; i < services.length; ++i) {
+			if (services[i].name === name) {
+				services.splice(i, 1);
+				break;
 			}
 		}
-		return xhrRequest(options);
+	}
+
+	function request (options, blacklist) {
+		blacklist = blacklist || {};
+		for (var i = services.length - 1; i >= 0; --i) {
+			var service = services[i];
+			if (!(service.name in blacklist)) {
+				var result = service.callback(options, blacklist);
+				if (result) {
+					return result;
+				}
+			}
+		}
+		return (io.verbs[options.method] || xhrRequest)(options, blacklist);
 	}
 
 	// convenience methods
@@ -279,10 +305,12 @@ define([], function () {
 	io.processSuccess = processSuccess;
 	io.processFailure = processFailure;
 	io.processData = processData;
-	io.request  = request;
 
-	io.services = {};
+	io.request  = request;
+	io.verbs    = {};
 	io.makeVerb = makeVerb;
+	io.addService    = addService;
+	io.removeService = removeService;
 
 	return io;
 });

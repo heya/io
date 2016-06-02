@@ -19,7 +19,7 @@ define(['./main'], function (io) {
 		return deferred.promise || deferred;
 	}
 
-	io.services.__load = loadRequest;
+	io.verbs.__load = loadRequest;
 
 	return io.makeVerb('__load');
 });

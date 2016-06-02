@@ -301,6 +301,8 @@ define(['./main', './FauxXHR'], function (io, FauxXHR) {
 	}
 
 
+	io.FauxXHR = FauxXHR;
+
 	io.bundle = {
 		// defaults
 		defaultCache:  defaultOptIn,
