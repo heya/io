@@ -253,13 +253,13 @@ define([], function () {
 
 	function byPriority (a, b) { return a.priority - b.priority; }
 
-	function addService (service) {
-		io.removeService(service.name);
+	function attach (service) {
+		io.detach(service.name);
 		io.services.push(service);
 		io.services.sort(byPriority);
 	}
 
-	function removeService (name) {
+	function detach (name) {
 		for (var s = io.services, i = 0; i < s.length; ++i) {
 			if (s[i].name === name) {
 				s.splice(i, 1);
@@ -327,11 +327,13 @@ define([], function () {
 	io.processData = processData;
 
 	io.request  = request;
+
 	io.verbs    = {};
 	io.makeVerb = makeVerb;
+
 	io.services = [];
-	io.addService    = addService;
-	io.removeService = removeService;
+	io.attach   = attach;
+	io.detach   = detach;
 
 	return io;
 });

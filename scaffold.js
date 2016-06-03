@@ -20,7 +20,7 @@ define([], function () {
 		return io;
 
 		function attach () {
-			io.addService({
+			io.attach({
 				name:     name,
 				priority: priority,
 				callback: callback
