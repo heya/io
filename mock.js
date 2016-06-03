@@ -37,10 +37,10 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	}
 
 	function wrap (options, value) {
-		if (value instanceof io.FauxXHR) {
+		if (value instanceof FauxXHR) {
 			value = new io.Result(xhr, options, null);
 		}
-		return value && typeof value.then == 'function' ? value : io.Deferred.resolved(value);
+		return value && typeof value.then == 'function' ? value : io.Deferred.resolve(value);
 	}
 
 	function makeXHR (xhr) {
