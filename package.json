@@ -28,18 +28,19 @@
   "devDependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "heya-async": "^1.0.0",
     "heya-bundler": "^1.0.2",
     "heya-globalize": "^1.0.3",
-    "heya-unit": "^0.3.0"
-  },
-  "dependencies": {
-    "heya-async": "^1.0.0",
+    "heya-unit": "^0.3.0",
     "phantomjs-prebuilt": "^2.1.7",
     "request": "^2.71.0"
   },
   "browserGlobals": {
     "!root": "heya.io",
-    "./io": "heya.io",
+    "./main": "heya.io",
+    "./mock": "!heya.io",
+    "./dedupe": "!heya.io",
+    "./cache": "!heya.io",
     "./bundle": "!heya.io"
   }
 }

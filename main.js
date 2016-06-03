@@ -172,7 +172,7 @@ define([], function () {
 	}
 
 	function processSuccess (result) {
-		if (!(result.xhr instanceof XMLHttpRequest || io.FauxXHR && result.xhr instanceof io.FauxXHR)) {
+		if (!(result instanceof io.Result)) {
 			return result;
 		}
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
@@ -237,20 +237,32 @@ define([], function () {
 			catch(options.processFailure || io.processFailure);
 	}
 
+
 	// services
 
-	var services = [];
+	// Service is represented by an object with three properties:
+	// name - a unique id of a service
+	// priority - a number indicating a priority, services with higher priority
+	//   will be called first. A range of 0-100 is suggested.
+	// callback(options, blacklist) - a function called in the context of
+	//   a service structure. It should return a correctly formed promise,
+	//   or a falsy value to indicate that the next service should be tried.
+
+	// blacklist - an object/dictionary. Service names that should be ignored
+	//   are included as properties with truthy values. Default: an empty object.
+
+	function byPriority (a, b) { return a.priority - b.priority; }
 
 	function addService (service) {
 		io.removeService(service.name);
-		services.push(service);
-		services.sort(function (a, b) { return a.priority - b.priority; });
+		io.services.push(service);
+		io.services.sort(byPriority);
 	}
 
 	function removeService (name) {
-		for (var i = 0; i < services.length; ++i) {
-			if (services[i].name === name) {
-				services.splice(i, 1);
+		for (var s = io.services, i = 0; i < s.length; ++i) {
+			if (s[i].name === name) {
+				s.splice(i, 1);
 				break;
 			}
 		}
@@ -258,9 +270,9 @@ define([], function () {
 
 	function request (options, blacklist) {
 		blacklist = blacklist || {};
-		for (var i = services.length - 1; i >= 0; --i) {
-			var service = services[i];
-			if (!(service.name in blacklist)) {
+		for (var s = io.services, i = s.length - 1; i >= 0; --i) {
+			var service = s[i];
+			if (!blacklist[service.name]) {
 				var result = service.callback(options, blacklist);
 				if (result) {
 					return result;
@@ -269,6 +281,11 @@ define([], function () {
 		}
 		return (io.verbs[options.method] || xhrRequest)(options, blacklist);
 	}
+
+	function makeKey (options) {
+		return io.prefix + (options.method || 'GET') + '-' + io.buildUrl(options);
+	}
+
 
 	// convenience methods
 
@@ -290,6 +307,7 @@ define([], function () {
 	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(registerVerb);
 	io.remove = io['delete']; // alias for simplicity
 
+
 	// export
 
 	io.Result    = Result;
@@ -298,6 +316,8 @@ define([], function () {
 	io.BadStatus = BadStatus;
 	io.Deferred  = io.FauxDeferred = FauxDeferred;
 
+	io.prefix    = 'io-';
+	io.makeKey   = makeKey;
 	io.makeQuery = makeQuery;
 	io.buildUrl  = buildUrl;
 
@@ -309,6 +329,7 @@ define([], function () {
 	io.request  = request;
 	io.verbs    = {};
 	io.makeVerb = makeVerb;
+	io.services = [];
 	io.addService    = addService;
 	io.removeService = removeService;
 
