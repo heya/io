@@ -42,7 +42,8 @@ app.all('/api', function (req, res) {
 			originalUrl: req.originalUrl,
 			headers: req.headers,
 			body: req.body && req.body.length && req.body.toString() || null,
-			query: req.query
+			query: req.query,
+			now: Date.now()
 		};
 	res.jsonp(data);
 });
