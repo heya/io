@@ -1,15 +1,14 @@
-(function(_,f){window.heya.io.jsonp=f(window.heya.io.main);})
-(['./main'], function (io) {
+(function(_,f){window.heya.io.jsonp=f(window.heya.io);})
+(['./io'], function (io) {
 	'use strict';
 
 	// JSONP handler
 
 	var counter = 0;
 
-	function jsonp (options, data) {
-		options = io.processOptions(typeof options == 'string' ? {url: options} : options);
+	function jsonpRequest (options) {
 		var url = options.url,
-			query = options.query || options.data || data,
+			query = options.query || options.data,
 			callback = options.callback || 'callback',
 			name = '__io_jsonp_callback_' + (counter++),
 			script = document.createElement('script'),
@@ -28,8 +27,10 @@
 		};
 		script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + io.makeQuery(query);
 		document.documentElement.appendChild(script);
-		return (deferred.promise || deferred).catch(options.processFailure || io.processFailure);
+		return deferred.promise || deferred;
 	}
 
-	return jsonp;
+	io.transports.__jsonp = jsonpRequest;
+
+	return io.makeVerb('__jsonp', 'transport');
 });

@@ -37,7 +37,8 @@
   },
   "browserGlobals": {
     "!root": "heya.io",
-    "./main": "heya.io",
+    "./io": "heya.io",
+    "./main": "!heya.io",
     "./mock": "!heya.io",
     "./track": "!heya.io",
     "./cache": "!heya.io",
