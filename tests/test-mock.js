@@ -123,6 +123,48 @@ define(['module', 'heya-unit', 'heya-io/mock', 'heya-async/Deferred', 'heya-asyn
 				'error 501'
 			]
 		},
+		function test_promise (t) {
+			var x = t.startAsync();
+			io.mock('http://localhost:3000/a', function () {
+				return io.get('http://localhost:3000/api');
+			});
+			io.get('http://localhost:3000/a').then(function (data) {
+				eval(t.TEST('typeof data === "object"'));
+				eval(t.TEST('data.method === "GET"'));
+				io.mock('http://localhost:3000/a', null);
+				x.done();
+			});
+		},
+		function test_timeout (t) {
+			var x = t.startAsync();
+			io.mock('http://localhost:3000/a', function () {
+				return timeout.resolve(20, Deferred).then(function () {
+					return 42;
+				});
+			});
+			io.get('http://localhost:3000/a').then(function (data) {
+				eval(t.TEST('data === 42'));
+				io.mock('http://localhost:3000/a', null);
+				x.done();
+			});
+		},
+		function test_priority (t) {
+			var x = t.startAsync();
+			io.get('http://localhost:3000/api').then(function (data) {
+				eval(t.TEST('typeof data === "object"'));
+				eval(t.TEST('data.method === "GET"'));
+				io.mock('http://localhost:3000/api', function () { return 42; });
+				return io.get('http://localhost:3000/api');
+			}).then(function (data) {
+				eval(t.TEST('data === 42'));
+				io.mock('http://localhost:3000/api', null);
+				return io.get('http://localhost:3000/api');
+			}).then(function (data) {
+				eval(t.TEST('typeof data === "object"'));
+				eval(t.TEST('data.method === "GET"'));
+				x.done();
+			});
+		},
 		function test_teardownp () {
 			io.Deferred = io.FauxDeferred;
 			io.detach('mock');
