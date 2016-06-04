@@ -1,4 +1,4 @@
-define(['./main'], function (io) {
+define(['./io'], function (io) {
 	'use strict';
 
 	// script handler

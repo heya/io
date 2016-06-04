@@ -1,4 +1,4 @@
-define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
+define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	'use strict';
 
 	// cache I/O requests

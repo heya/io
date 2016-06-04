@@ -1,4 +1,4 @@
-define(['./main', './scaffold'], function (io, scaffold) {
+define(['./io', './scaffold'], function (io, scaffold) {
 	'use strict';
 
 	// keep track of I/O requests

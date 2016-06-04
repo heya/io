@@ -1,4 +1,4 @@
-define(['module', 'heya-unit', 'heya-io', 'heya-io/load', 'heya-async/Deferred'], function (module, unit, io, load, Deferred) {
+define(['module', 'heya-unit', 'heya-io/io', 'heya-io/load', 'heya-async/Deferred'], function (module, unit, io, load, Deferred) {
 	'use strict';
 
 	unit.add(module, [
