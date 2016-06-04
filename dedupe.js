@@ -24,7 +24,7 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		}
 
 		// register a request
-		promise = flyByKey(key);
+		var promise = flyByKey(key);
 		deferred = io.dedupe.deferred[key];
 		blacklist.dedupe = 1;
 		io.request(options, blacklist).then(deferred.resolve.bind(deferred),

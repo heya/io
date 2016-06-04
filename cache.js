@@ -9,7 +9,7 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 		}
 
 		// retrieve data, if available
-		var key = io.makeKey(options), data = io.bundle.cache.retrieve(key);
+		var key = io.makeKey(options), data = io.cache.storage.retrieve(key);
 		if (typeof data !== 'undefined') {
 			return io.Deferred.resolve(new io.Result(new FauxXHR(data), options, null));
 		}
