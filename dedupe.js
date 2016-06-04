@@ -3,12 +3,12 @@ define(['./main', './scaffold'], function (io, scaffold) {
 
 	// dedupe identical I/O requests
 
-	function dedupe (options, blacklist) {
+	function dedupe (options, key, blacklist) {
 		if (!io.dedupe.optIn(options)) {
 			return null;
 		}
 
-		var key = io.makeKey(options), deferred = io.dedupe.deferred[key];
+		var deferred = io.dedupe.deferred[key];
 
 		// check if in flight
 		if (io.dedupe.flying[key]) {
@@ -27,7 +27,7 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		var promise = flyByKey(key);
 		deferred = io.dedupe.deferred[key];
 		blacklist.dedupe = 1;
-		io.request(options, blacklist).then(deferred.resolve.bind(deferred),
+		io.request(options, key, blacklist).then(deferred.resolve.bind(deferred),
 			deferred.reject.bind(deferred));
 		return promise;
 	}

@@ -1,15 +1,17 @@
-define(['./dedupe', './FauxXHR', './scaffold', './cache'], function (io, FauxXHR, scaffold) {
+define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	'use strict';
 
 	// bundle I/O requests
 
-	function bundle (options, blacklist) {
+	function bundle (options, key, blacklist) {
 		if (!io.bundle.optIn(options) || options.wait) {
 			return null;
 		}
 
-		var waitTime = io.bundle.waitTime, isBundling = io.bundle.isStarted();
-		if (waitTime > 0 || isBundling) {
+		var waitTime = io.bundle.waitTime,
+			isBundling = io.bundle.isStarted();
+
+		if (isBundling || waitTime > 0) {
 			if (!isBundling && waitTime > 0) {
 				setTimeout(io.bundle.commit, waitTime);
 				io.bundle.start();
@@ -94,7 +96,7 @@ define(['./dedupe', './FauxXHR', './scaffold', './cache'], function (io, FauxXHR
 				if (deferred) {
 					deferred.resolve(new io.Result(xhr, result.options, null));
 				} else {
-					io.cache.saveByKey(key, xhr);
+					io.cache && io.cache.saveByKey(key, xhr);
 				}
 			});
 		}

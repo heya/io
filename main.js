@@ -268,18 +268,19 @@ define([], function () {
 		}
 	}
 
-	function request (options, blacklist) {
+	function request (options, key, blacklist) {
 		blacklist = blacklist || {};
+		key = key || io.makeKey(options);
 		for (var s = io.services, i = s.length - 1; i >= 0; --i) {
 			var service = s[i];
 			if (!blacklist[service.name]) {
-				var result = service.callback(options, blacklist);
+				var result = service.callback(options, key, blacklist);
 				if (result) {
 					return result;
 				}
 			}
 		}
-		return (io.verbs[options.method] || xhrRequest)(options, blacklist);
+		return (io.verbs[options.method] || xhrRequest)(options, key, blacklist);
 	}
 
 	function makeKey (options) {

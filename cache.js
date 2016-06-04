@@ -3,20 +3,20 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 	// cache I/O requests
 
-	function cache (options, blacklist) {
+	function cache (options, key, blacklist) {
 		if (!io.cache.optIn(options) || options.wait) {
 			return null;
 		}
 
 		// retrieve data, if available
-		var key = io.makeKey(options), data = io.cache.storage.retrieve(key);
+		var data = io.cache.storage.retrieve(key);
 		if (typeof data !== 'undefined') {
 			return io.Deferred.resolve(new io.Result(new FauxXHR(data), options, null));
 		}
 
 		// pass the request, and cache the result
 		blacklist.cache = 1;
-		var promise = io.request(options, blacklist);
+		var promise = io.request(options, key, blacklist);
 		promise.then(function (result) { saveByKey(key, result); });
 		return promise;
 	}

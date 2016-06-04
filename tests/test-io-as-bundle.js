@@ -1,12 +1,15 @@
-define(['module', 'heya-unit', 'heya-io', 'heya-async/Deferred', 'heya-io/bundle'], function (module, unit, io, Deferred) {
+define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io/dedupe', 'heya-io/cache'], function (module, unit, io, Deferred) {
 	'use strict';
 
 	unit.add(module, [
 		function test_setup () {
 			io.Deferred = Deferred;
-			io.bundle.attach();
 			io.bundle.minSize = io.bundle.maxSize = 1;
+			io.dedupe.attach();
+			io.cache .attach();
+			io.bundle.attach();
 		},
+		/*
 		function test_simple_io (t) {
 			var x = t.startAsync();
 			io('http://localhost:3000/api').then(function (data) {
@@ -63,7 +66,9 @@ define(['module', 'heya-unit', 'heya-io', 'heya-async/Deferred', 'heya-io/bundle
 				x.done();
 			});
 		},
+		*/
 		function test_io_get_error (t) {
+			debugger;
 			var x = t.startAsync();
 			io.get('http://localhost:3000/api', {status: 500}).then(function (data) {
 				t.test(false); // we should not be here
@@ -73,6 +78,7 @@ define(['module', 'heya-unit', 'heya-io', 'heya-async/Deferred', 'heya-io/bundle
 				x.done();
 			});
 		},
+		/*
 		function test_io_get_txt (t) {
 			var x = t.startAsync();
 			io.get('http://localhost:3000/api', {payloadType: 'txt'}).then(function (data) {
@@ -138,8 +144,11 @@ define(['module', 'heya-unit', 'heya-io', 'heya-async/Deferred', 'heya-io/bundle
 				x.done();
 			});
 		},
+		*/
 		function test_teardown () {
-			io.bundle.detach();
+			io.detach('bundle');
+			io.detach('cache');
+			io.detach('dedupe');
 			io.Deferred = io.FauxDeferred;
 		}
 	]);
