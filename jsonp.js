@@ -29,7 +29,7 @@ define(['./main'], function (io) {
 		return deferred.promise || deferred;
 	}
 
-	io.verbs.__jsonp = jsonpRequest;
+	io.transports.__jsonp = jsonpRequest;
 
-	return io.makeVerb('__jsonp');
+	return io.makeVerb('__jsonp', 'transport');
 });

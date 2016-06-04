@@ -280,7 +280,7 @@ define([], function () {
 				}
 			}
 		}
-		return (io.verbs[options.method] || xhrRequest)(options, key, blacklist);
+		return (io.transports[options.transport] || xhrRequest)(options, key, blacklist);
 	}
 
 	function makeKey (options) {
@@ -290,10 +290,10 @@ define([], function () {
 
 	// convenience methods
 
-	function makeVerb (verb) {
+	function makeVerb (verb, method) {
 		return function (url, data) {
 			var options = typeof url == 'string' ? {url: url} : Object.create(url);
-			options.method = verb;
+			options[method || 'method'] = verb;
 			if (data) {
 				options.data = data;
 			}
@@ -301,11 +301,9 @@ define([], function () {
 		};
 	}
 
-	function registerVerb (verb) {
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(function (verb) {
 		io[verb.toLowerCase()] = makeVerb(verb);
-	}
-
-	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(registerVerb);
+	});
 	io.remove = io['delete']; // alias for simplicity
 
 
@@ -327,10 +325,10 @@ define([], function () {
 	io.processFailure = processFailure;
 	io.processData = processData;
 
-	io.request  = request;
+	io.transports = {};
+	io.makeVerb   = makeVerb;
 
-	io.verbs    = {};
-	io.makeVerb = makeVerb;
+	io.request = request;
 
 	io.services = [];
 	io.attach   = attach;
