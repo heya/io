@@ -3,12 +3,12 @@ define(['./main', './scaffold'], function (io, scaffold) {
 
 	// keep track of I/O requests
 
-	function dedupe (options, key, blacklist) {
-		if (!io.dedupe.optIn(options)) {
+	function track (options, key, blacklist) {
+		if (!io.track.optIn(options)) {
 			return null;
 		}
 
-		var deferred = io.dedupe.deferred[key];
+		var deferred = io.track.deferred[key];
 
 		// check if in flight
 		if (deferred) {
@@ -22,8 +22,8 @@ define(['./main', './scaffold'], function (io, scaffold) {
 
 		// register a request
 		var promise = flyByKey(key);
-		deferred = io.dedupe.deferred[key];
-		blacklist.dedupe = 1;
+		deferred = io.track.deferred[key];
+		blacklist.track = 1;
 		var newPromise = io.request(options, key, blacklist);
 		if (promise !== newPromise) {
 			newPromise.then(
@@ -35,9 +35,9 @@ define(['./main', './scaffold'], function (io, scaffold) {
 	}
 
 	function flyByKey(key) {
-		var deferred = io.dedupe.deferred[key], needsCleanUp = false;
+		var deferred = io.track.deferred[key], needsCleanUp = false;
 		if (!deferred) {
-			deferred = io.dedupe.deferred[key] = new io.Deferred();
+			deferred = io.track.deferred[key] = new io.Deferred();
 			needsCleanUp = true;
 		}
 		var promise = deferred.promise || deferred;
@@ -46,31 +46,31 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		}
 		return promise;
 		function cleanUp () {
-			delete io.dedupe.deferred[key];
+			delete io.track.deferred[key];
 		}
 	}
 
 	function fly (options) {
 		options = io.processOptions(typeof options == 'string' ?
 			{url: options, method: 'GET'} : options);
-		return io.dedupe.flyByKey(io.makeKey(options));
+		return io.track.flyByKey(io.makeKey(options));
 	}
 
 	function isFlying (options) {
 		options = io.processOptions(typeof options == 'string' ?
 			{url: options, method: 'GET'} : options);
-		return io.dedupe.deferred[io.makeKey(options)];
+		return io.track.deferred[io.makeKey(options)];
 	}
 
 
 	// export
 
-	io.dedupe = {
+	io.track = {
 		flyByKey: flyByKey,
 		fly:      fly,
 		isFlying: isFlying,
 
 		deferred: {}
 	};
-	return scaffold(io, 'dedupe', 30, dedupe);
+	return scaffold(io, 'track', 30, track);
 });

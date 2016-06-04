@@ -1,13 +1,13 @@
-define(['module', 'heya-unit', 'heya-io/dedupe', 'heya-async/Deferred-ext'], function (module, unit, io, Deferred) {
+define(['module', 'heya-unit', 'heya-io/track', 'heya-async/Deferred-ext'], function (module, unit, io, Deferred) {
 	'use strict';
 
 	unit.add(module, [
 		function test_setup () {
 			io.Deferred = Deferred;
-			io.dedupe.attach();
+			io.track.attach();
 		},
 		function test_exist (t) {
-			eval(t.TEST('typeof io.dedupe == "object"'));
+			eval(t.TEST('typeof io.track == "object"'));
 		},
 		function test_dedupe (t) {
 			var x = t.startAsync();
@@ -32,7 +32,7 @@ define(['module', 'heya-unit', 'heya-io/dedupe', 'heya-async/Deferred-ext'], fun
 		},
 		function test_teardownp () {
 			io.Deferred = io.FauxDeferred;
-			io.detach('dedupe');
+			io.detach('track');
 		}
 	]);
 

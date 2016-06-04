@@ -1,4 +1,4 @@
-define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
+define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	'use strict';
 
 	// bundle I/O requests
@@ -17,7 +17,7 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 				io.bundle.start();
 			}
 			io.bundle.pending[key] = options;
-			var deferred = io.dedupe.deferred[key];
+			var deferred = io.track.deferred[key];
 			return deferred.promise || deferred;
 		}
 
@@ -67,7 +67,7 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 	}
 
 	function sendRequest (options) {
-		var key = io.makeKey(options), deferred = io.dedupe.deferred[key];
+		var key = io.makeKey(options), deferred = io.track.deferred[key];
 		io.request(options, {bundle: 1}).then(
 			function (value) { deferred.resolve(value, true); },
 			function (value) { deferred.reject (value, true); }
@@ -91,7 +91,7 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 			bundle.forEach(function (result) {
 				var key = io.makeKey(result.options),
 					xhr = new FauxXHR(result.response),
-					deferred = io.dedupe.deferred[key];
+					deferred = io.track.deferred[key];
 				if (deferred) {
 					deferred.resolve(new io.Result(xhr, result.options, null), true);
 				} else {
@@ -118,7 +118,7 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 	// convenience functions
 
 	function fly (bundle) {
-		bundle.forEach(io.dedupe.fly);
+		bundle.forEach(io.track.fly);
 	}
 
 	function submit (bundle) {

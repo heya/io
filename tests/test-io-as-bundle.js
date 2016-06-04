@@ -1,12 +1,12 @@
-define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io/dedupe', 'heya-io/cache'], function (module, unit, io, Deferred) {
+define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io/track', 'heya-io/cache'], function (module, unit, io, Deferred) {
 	'use strict';
 
 	unit.add(module, [
 		function test_setup () {
 			io.Deferred = Deferred;
 			io.bundle.minSize = io.bundle.maxSize = 1;
-			io.dedupe.attach();
-			io.cache .attach();
+			io.track.attach();
+			io.cache.attach();
 			io.bundle.attach();
 		},
 		function test_simple_io (t) {
@@ -144,7 +144,7 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 		function test_teardown () {
 			io.detach('bundle');
 			io.detach('cache');
-			io.detach('dedupe');
+			io.detach('track');
 			io.cache.storage.clear();
 			io.Deferred = io.FauxDeferred;
 		}

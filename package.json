@@ -39,7 +39,7 @@
     "!root": "heya.io",
     "./main": "heya.io",
     "./mock": "!heya.io",
-    "./dedupe": "!heya.io",
+    "./track": "!heya.io",
     "./cache": "!heya.io",
     "./bundle": "!heya.io"
   }
