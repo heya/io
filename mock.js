@@ -3,7 +3,7 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 	// mock I/O requests
 
-	function mock (options, blacklist) {
+	function mock (options) {
 		if (!io.mock.optIn(options)) {
 			return null;
 		}

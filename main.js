@@ -96,13 +96,13 @@ define([], function () {
 			});
 		// add event listeners
 		xhr.onload = function (event) {
-			d.resolve(new io.Result(xhr, options, event));
+			d.resolve(new io.Result(xhr, options, event), true);
 		};
 		xhr.onerror = function (event) {
-			d.reject(new io.FailedIO(xhr, options, event));
+			d.reject(new io.FailedIO(xhr, options, event), true);
 		};
 		xhr.ontimeout = function (event) {
-			d.reject(new io.TimedOut(xhr, options, event));
+			d.reject(new io.TimedOut(xhr, options, event), true);
 		};
 		if (typeof d.progress == 'function') {
 			xhr.onprogress = function (event) {

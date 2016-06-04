@@ -9,7 +9,6 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 			io.cache .attach();
 			io.bundle.attach();
 		},
-		/*
 		function test_simple_io (t) {
 			var x = t.startAsync();
 			io('http://localhost:3000/api').then(function (data) {
@@ -66,7 +65,6 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 				x.done();
 			});
 		},
-		*/
 		function test_io_get_error (t) {
 			debugger;
 			var x = t.startAsync();
@@ -78,7 +76,6 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 				x.done();
 			});
 		},
-		/*
 		function test_io_get_txt (t) {
 			var x = t.startAsync();
 			io.get('http://localhost:3000/api', {payloadType: 'txt'}).then(function (data) {
@@ -144,11 +141,11 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 				x.done();
 			});
 		},
-		*/
 		function test_teardown () {
 			io.detach('bundle');
 			io.detach('cache');
 			io.detach('dedupe');
+			io.cache.storage.clear();
 			io.Deferred = io.FauxDeferred;
 		}
 	]);

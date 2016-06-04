@@ -1,7 +1,7 @@
 define(['./main', './scaffold'], function (io, scaffold) {
 	'use strict';
 
-	// dedupe identical I/O requests
+	// keep track of I/O requests
 
 	function dedupe (options, key, blacklist) {
 		if (!io.dedupe.optIn(options)) {
@@ -11,15 +11,12 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		var deferred = io.dedupe.deferred[key];
 
 		// check if in flight
-		if (io.dedupe.flying[key]) {
+		if (deferred) {
 			return deferred.promise || deferred;
 		}
 
 		// check if required to wait
 		if (options.wait) {
-			if (deferred) {
-				return deferred.promise || deferred;
-			}
 			return flyByKey(key);
 		}
 
@@ -27,8 +24,13 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		var promise = flyByKey(key);
 		deferred = io.dedupe.deferred[key];
 		blacklist.dedupe = 1;
-		io.request(options, key, blacklist).then(deferred.resolve.bind(deferred),
-			deferred.reject.bind(deferred));
+		var newPromise = io.request(options, key, blacklist);
+		if (promise !== newPromise) {
+			newPromise.then(
+				function (value) { deferred.resolve(value, true); },
+				function (value) { deferred.reject (value, true); }
+			);
+		}
 		return promise;
 	}
 
@@ -38,14 +40,12 @@ define(['./main', './scaffold'], function (io, scaffold) {
 			deferred = io.dedupe.deferred[key] = new io.Deferred();
 			needsCleanUp = true;
 		}
-		io.dedupe.flying[key] = true;
 		var promise = deferred.promise || deferred;
 		if (needsCleanUp) {
 			promise.then(cleanUp, cleanUp);
 		}
 		return promise;
 		function cleanUp () {
-			delete io.dedupe.flying[key];
 			delete io.dedupe.deferred[key];
 		}
 	}
@@ -59,7 +59,7 @@ define(['./main', './scaffold'], function (io, scaffold) {
 	function isFlying (options) {
 		options = io.processOptions(typeof options == 'string' ?
 			{url: options, method: 'GET'} : options);
-		return io.dedupe.flying[io.makeKey(options)];
+		return io.dedupe.deferred[io.makeKey(options)];
 	}
 
 
@@ -70,7 +70,6 @@ define(['./main', './scaffold'], function (io, scaffold) {
 		fly:      fly,
 		isFlying: isFlying,
 
-		flying:   {},
 		deferred: {}
 	};
 	return scaffold(io, 'dedupe', 30, dedupe);

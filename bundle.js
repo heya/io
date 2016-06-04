@@ -16,12 +16,9 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 				setTimeout(io.bundle.commit, waitTime);
 				io.bundle.start();
 			}
-			if (io.bundle.pending[key]) {
-				var deferred = io.dedupe.deferred[key];
-				return deferred.promise || deferred;
-			}
 			io.bundle.pending[key] = options;
-			return io.dedupe.flyByKey(key);
+			var deferred = io.dedupe.deferred[key];
+			return deferred.promise || deferred;
 		}
 
 		return null;
@@ -71,8 +68,10 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 
 	function sendRequest (options) {
 		var key = io.makeKey(options), deferred = io.dedupe.deferred[key];
-		io.request(options, {bundle: 1}).then(deferred.resolve.bind(deferred),
-			deferred.reject.bind(deferred));
+		io.request(options, {bundle: 1}).then(
+			function (value) { deferred.resolve(value, true); },
+			function (value) { deferred.reject (value, true); }
+		);
 	}
 
 	function flattenOptions (options) {
@@ -94,7 +93,7 @@ define(['./dedupe', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold)
 					xhr = new FauxXHR(result.response),
 					deferred = io.dedupe.deferred[key];
 				if (deferred) {
-					deferred.resolve(new io.Result(xhr, result.options, null));
+					deferred.resolve(new io.Result(xhr, result.options, null), true);
 				} else {
 					io.cache && io.cache.saveByKey(key, xhr);
 				}

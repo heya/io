@@ -4,7 +4,7 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	// cache I/O requests
 
 	function cache (options, key, blacklist) {
-		if (!io.cache.optIn(options) || options.wait) {
+		if (!io.cache.optIn(options) || options.wait || io.dedupe && io.dedupe.deferred[key]) {
 			return null;
 		}
 
