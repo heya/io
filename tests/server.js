@@ -12,9 +12,9 @@ var bundler = require('heya-bundler');
 
 var app = express();
 
-// add middleware
 app.use(bodyParser.raw({type: '*/*'}));
-app.use(express.static(path.join(__dirname, '..')));
+
+var counter = 0;
 
 app.all('/api', function (req, res) {
 	if (req.query.status) {
@@ -43,7 +43,8 @@ app.all('/api', function (req, res) {
 			headers: req.headers,
 			body: req.body && req.body.length && req.body.toString() || null,
 			query: req.query,
-			now: Date.now()
+			now: Date.now(),
+			counter: counter++
 		};
 	res.jsonp(data);
 });
@@ -61,6 +62,8 @@ function isUrlAcceptable (uri) {
 function resolveUrl (uri) {
 	return uri.charAt(0) === '/' ? 'http://localhost:3000' + uri : uri;
 }
+
+app.use(express.static(path.join(__dirname, '..')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
