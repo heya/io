@@ -8,26 +8,30 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 			return null;
 		}
 
-		var url = options.url, callback = io.mock.precise[url];
-		if (!callback) {
-			var index = find(url), wildcard = io.mock.wildcard;
-			if (index < wildcard.length) {
-				var pattern = wildcard[index].url;
-				if (url.length >= pattern.length && pattern === url.substring(0, pattern.length)) {
-					callback = wildcard[index].callback;
+		var url = options.url, callback = io.mock.exact[url];
+		findCallback: {
+			if (callback) {
+				break findCallback;
+			}
+			for (var prefix = io.mock.prefix, i = 0; i < prefix.length; ++i) {
+				var pattern = prefix[i].url;
+				if (pattern.length <= url.length && pattern === url.substring(0, pattern.length)) {
+					callback = prefix[i].callback;
+					break findCallback;
 				}
 			}
+			return null;
 		}
 
-		return callback ? wrap(options, callback(options)) : null;
+		return wrap(options, callback(options));
 	}
 
 	function find (url) {
 		// binary search, see https://github.com/heya/ctr/blob/master/algos/binarySearch.js
-		var wildcard = io.mock.wildcard, l = 0, r = wildcard.length;
+		var prefix = io.mock.prefix, l = 0, r = prefix.length;
 		while (l < r) {
-			var m = ((r - l) >> 1) + l;
-			if (wildcard[m].name < url) {
+			var m = ((r - l) >> 1) + l, x = prefix[m].url;
+			if (x.length > url.length || x.length == url.length && x < url) {
 				l = m + 1;
 			} else {
 				r = m;
@@ -38,7 +42,7 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 	function wrap (options, value) {
 		if (value instanceof FauxXHR) {
-			value = new io.Result(xhr, options, null);
+			value = new io.Result(value, options, null);
 		}
 		return value && typeof value.then == 'function' ? value : io.Deferred.resolve(value);
 	}
@@ -59,26 +63,26 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	io.mock = function (url, callback) {
 		if (url && typeof url == 'string') {
 			if (url.charAt(url.length - 1) === '*') {
-				// wildcard
+				// prefix
 				url = url.substring(0, url.length - 1);
-				var index = find(url), wildcard = io.mock.wildcard;
-				if (index < wildcard.length) {
-					if (url === wildcard[index].url) {
+				var index = find(url), prefix = io.mock.prefix;
+				if (index < prefix.length) {
+					if (url === prefix[index].url) {
 						if (callback) {
-							wildcard[index].callback = callback;
+							prefix[index].callback = callback;
 						} else {
-							wildcard.splice(index, 1);
+							prefix.splice(index, 1);
 						}
 						return;
 					}
 				}
-				wildcard.splice(index, 0, {url: url, callback: callback});
+				prefix.splice(index, 0, {url: url, callback: callback});
 			} else {
-				// precise
+				// exact
 				if (callback) {
-					io.mock.precise[url] = callback;
+					io.mock.exact[url] = callback;
 				} else {
-					delete io.mock.precise[url];
+					delete io.mock.exact[url];
 				}
 			}
 		}
@@ -86,10 +90,10 @@ define(['./main', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 	io.mock.theDefault = true;
 
-	io.mock.precise    = {};
-	io.mock.wildcard   = [];
+	io.mock.exact  = {};
+	io.mock.prefix = [];
 
-	io.makeXHR         = makeXHR;
+	io.mock.makeXHR = makeXHR;
 
 	return scaffold(io, 'mock', 20, mock);
 });
