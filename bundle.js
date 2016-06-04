@@ -148,7 +148,18 @@ define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) 
 
 	// export
 
+	function attach () {
+		io.track.attach();
+		io.attach({
+			name:     'bundle',
+			priority: 10,
+			callback: bundle
+		});
+	}
+
 	io.bundle = {
+		attach: attach,
+
 		// start/commit bundles
 		start:    start,
 		commit:   commit,

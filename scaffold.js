@@ -14,8 +14,13 @@ define([], function () {
 			service.theDefault = defaultOptIn;
 		}
 
-		service.attach = attach;
-		service.optIn  = optIn;
+		if (!service.attach) {
+			service.attach = attach;
+		}
+
+		if (!service.optIn) {
+			service.optIn = optIn;
+		}
 
 		return io;
 

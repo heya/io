@@ -5,7 +5,6 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 		function test_setup () {
 			io.Deferred = Deferred;
 			io.bundle.minSize = io.bundle.maxSize = 1;
-			io.track.attach();
 			io.cache.attach();
 			io.bundle.attach();
 		},
