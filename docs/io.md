@@ -2,13 +2,13 @@
 
 `io` is used to communicate with servers. It is a thin wrapper over
 [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
-based on promises (special fast implemenation of promises is provided with `heya-async`.
+based on promises (special fast implementation of promises is provided with `heya-async`).
 Additionally it includes a simple plugin to make [JSON-P](http://json-p.org/) calls.
 
 It is three main purposes:
 
 1. Provide a convenient flexible helper to code I/O requests.
-2. Provide a way to customize an I/O handling to account for pecularities of a given server environment including URL rewriting,
+2. Provide a way to customize an I/O handling to account for peculiarities of a given server environment including URL rewriting,
    handling custom error envelopes, implementing application-specific retries, and so on.
 3. Provide a solid foundation to orchestrate I/O (see `io-bundle`).
 
@@ -19,7 +19,7 @@ As such the following main API is provided:
 * `io.put()` &mdash; make a PUT call.
 * `io.patch()` &mdash; make a PATCH call.
 * `io.remove()`  and `io['delete']()` &mdash; make a DELETE call.
-* `io.jsonp()` &mdash; make a JSON-P call &mdash; requires a separate plugin `io-jsonp` (see its documentation for more details).
+* `io.jsonp()` &mdash; make a JSON-P call &mdash; requires a separate plugin `jsonp` (see its documentation for more details).
 
 All of them are built on top of:
 
@@ -42,7 +42,7 @@ The rest of properties are all optional with reasonable defaults:
 * `query` is a query dictionary (a key/value hash), which is used to form a query part of URL after `'?'`. Values of such dictionary can be strings,
   or arrays of strings to form multiple values with the same key. If URL already contains a query part, it is added as is without checking for duplicates. Default: none.
 * `data` is a data object to send. For GET method it is assumed to be a query object, if `query` is not specified. For all other requests, it is assumed to be a payload.
-  If `data` is an object of `FormData`, `ArrayBuffer`, `Blob`, or `Docyment`, it is sent as is. Otherwise, if `Content-Type` is `application/json` or missing,
+  If `data` is an object of `FormData`, `ArrayBuffer`, `Blob`, or `Document`, it is sent as is. Otherwise, if `Content-Type` is `application/json` or missing,
   `data` is assumed to be a JSON object and stringified. In all other cases it is assumed to be a preformatted value, and send as is. Default: none.
 * `headers` is a dictionary (a key/value hash), which is used to set request headers. Values of such a dictionary can be strings,
   or arrays of strings to form multiple values with the same key. Default: none, but if there is no `Accept` header, it is set to `application/json`.
