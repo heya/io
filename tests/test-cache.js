@@ -11,11 +11,19 @@ define(['module', 'heya-unit', 'heya-io/cache', 'heya-async/Deferred-ext'], func
 		},
 		function test_cache (t) {
 			var x = t.startAsync(), counter;
+			io.cache.storage.clear();
+			// the next one should be from a server
 			io.get('http://localhost:3000/api').then(function (value) {
 				counter = value.counter;
+				// the next one should be from cache
 				return io.get('http://localhost:3000/api');
 			}).then(function (value) {
 				eval(t.TEST('counter === value.counter'));
+				io.cache.storage.clear();
+				// the next one should be from a server
+				return io.get('http://localhost:3000/api');
+			}).then(function (value) {
+				eval(t.TEST('counter !== value.counter'));
 				x.done();
 			});
 		},
