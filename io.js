@@ -211,9 +211,11 @@ define([], function () {
 		// options.withCredentials? - a Boolean flag for cross-site requests. Default: not set.
 		// options.mime? - a string. If present, overrides a MIME type. Default: not set.
 		// options.wait? - a Boolean flag to indicate our interest in a request without initiating it. Default: false.
-		// options.cache? - a Boolean flag to opt-in/out in caching. Default: as set in io.bundle.defaultOptIn.
+		// options.mock? - a Boolean flag to opt-in/out in mocking. Default: as set in io.mock.defaultOptIn.
+		// options.track? - a Boolean flag to opt-in/out in tracking. Default: as set in io.track.defaultOptIn.
+		// options.cache? - a Boolean flag to opt-in/out in caching. Default: as set in io.cache.defaultOptIn.
 		// options.bundle? - a Boolean flag to opt-in/out of bundling. Default: as set in io.bundle.defaultOptIn.
-		// options.returnXHR -  a Boolean flag to return an XHR object instead of a decoded data.
+		// options.returnXHR -  a Boolean flag to return an XHR object instead of a decoded data, if available.
 		// options.processSuccess - a function to extract a value for a successful I/O. Default: io.processSuccess.
 		// options.processFailure - a function to extract a value for a failed I/O. Default: io.processFailure.
 
