@@ -3,12 +3,12 @@ define(['./io', './scaffold'], function (io, scaffold) {
 
 	// keep track of I/O requests
 
-	function track (options, key, blacklist) {
+	function track (options, prep, level) {
 		if (!io.track.optIn(options)) {
 			return null;
 		}
 
-		var deferred = io.track.deferred[key];
+		var key = prep.key, deferred = io.track.deferred[key];
 
 		// check if in flight
 		if (deferred) {
@@ -23,8 +23,7 @@ define(['./io', './scaffold'], function (io, scaffold) {
 		// register a request
 		var promise = flyByKey(key);
 		deferred = io.track.deferred[key];
-		blacklist.track = 1;
-		var newPromise = io.request(options, key, blacklist);
+		var newPromise = io.request(options, prep, level - 1);
 		if (promise !== newPromise) {
 			newPromise.then(
 				function (value) { deferred.resolve(value, true); },
