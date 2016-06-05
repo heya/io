@@ -8,20 +8,19 @@
 		return !options.method || options.method.toUpperCase() == 'GET';
 	}
 
+	var names = ['theDefault', 'attach', 'detach', 'optIn'];
+
 	return function (io, name, priority, callback) {
 		var service = io[name] = io[name] || {};
+		service.isActive = false;
 
-		if (!service.theDefault) {
-			service.theDefault = defaultOptIn;
-		}
+		var methods = [defaultOptIn, attach, detach, optIn];
 
-		if (!service.attach) {
-			service.attach = attach;
-		}
-
-		if (!service.optIn) {
-			service.optIn = optIn;
-		}
+		names.forEach(function (name, index) {
+			if (!service[name]) {
+				service[name] = methods[index];
+			}
+		});
 
 		return io;
 
@@ -31,6 +30,12 @@
 				priority: priority,
 				callback: callback
 			});
+			io[name].isActive = true;
+		}
+
+		function detach () {
+			io.detach(name);
+			io[name].isActive = false;
 		}
 
 		function optIn (options) {

@@ -5,7 +5,7 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 		function test_setup () {
 			io.Deferred = Deferred;
 			io.bundle.minSize = io.bundle.maxSize = 1;
-			io.cache.attach();
+			io.cache && io.cache.attach();
 			io.bundle.attach();
 		},
 		function test_simple_io (t) {
@@ -65,7 +65,6 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 			});
 		},
 		function test_io_get_error (t) {
-			debugger;
 			var x = t.startAsync();
 			io.get('http://localhost:3000/api', {status: 500}).then(function (data) {
 				t.test(false); // we should not be here
@@ -141,9 +140,9 @@ define(['module', 'heya-unit', 'heya-io/bundle', 'heya-async/Deferred', 'heya-io
 			});
 		},
 		function test_teardown () {
-			io.detach('bundle');
-			io.detach('cache');
-			io.detach('track');
+			io.bundle.detach();
+			io.cache.detach();
+			io.track.detach();
 			io.cache.storage.clear();
 			io.Deferred = io.FauxDeferred;
 		}

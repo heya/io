@@ -21,7 +21,7 @@ define(['module', 'heya-unit', 'heya-io/cache', 'heya-async/Deferred-ext'], func
 		},
 		function test_teardownp () {
 			io.Deferred = io.FauxDeferred;
-			io.detach('cache');
+			io.cache.detach();
 			io.cache.storage.clear();
 		}
 	]);

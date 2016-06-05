@@ -65,7 +65,7 @@ define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) 
 			data:   bundle.map(function (item) {
 				return flattenOptions(item.options);
 			})
-		}).then(unbundle);
+		});
 	}
 
 	function sendRequest (item) {
@@ -108,12 +108,14 @@ define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) 
 			data.results instanceof Array ? data.results : null;
 	}
 
-	function processSuccess (result) {
-		var data = ioProcessSuccess(result);
-		if (isOn && !(data && typeof data.then == 'function')) {
-			io.bundle.unbundle(data);
-		}
-		return data;
+	function attachProcessSuccess (previousProcessSuccess) {
+		return function (result) {
+			var data = previousProcessSuccess(result);
+			if (io.bundle.isActive) {
+				io.bundle.unbundle(data);
+			}
+			return data;
+		};
 	}
 
 
@@ -152,11 +154,13 @@ define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) 
 
 	function attach () {
 		io.track.attach();
+		io.processSuccess = attachProcessSuccess(io.processSuccess);
 		io.attach({
 			name:     'bundle',
 			priority: 10,
 			callback: bundle
 		});
+		io.bundle.isActive = true;
 	}
 
 	io.bundle = {
