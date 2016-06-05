@@ -4,7 +4,7 @@
 
 	// bundle I/O requests
 
-	function bundle (options, key, blacklist) {
+	function bundle (options, prep, level) {
 		if (!io.bundle.optIn(options) || options.wait) {
 			return null;
 		}
@@ -17,8 +17,8 @@
 				setTimeout(io.bundle.commit, waitTime);
 				io.bundle.start();
 			}
-			io.bundle.pending[key] = options;
-			var deferred = io.track.deferred[key];
+			io.bundle.pending[prep.key] = {options: options, prep: prep, level: level};
+			var deferred = io.track.deferred[prep.key];
 			return deferred.promise || deferred;
 		}
 
@@ -63,13 +63,15 @@
 			url:    io.bundle.url,
 			method: 'PUT',
 			bundle: false,
-			data:   bundle.map(flattenOptions)
+			data:   bundle.map(function (item) {
+				return flattenOptions(item.options);
+			})
 		}).then(unbundle);
 	}
 
-	function sendRequest (options) {
-		var key = io.makeKey(options), deferred = io.track.deferred[key];
-		io.request(options, {bundle: 1}).then(
+	function sendRequest (item) {
+		var key = item.prep.key, deferred = io.track.deferred[key];
+		io.request(item.options, item.prep, item.level - 1).then(
 			function (value) { deferred.resolve(value, true); },
 			function (value) { deferred.reject (value, true); }
 		);

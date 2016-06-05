@@ -54,14 +54,15 @@
 		return query.join('&');
 	}
 
+	var noPayload = {GET: 1, HEAD: 1};
+
 	function buildUrl (options) {
 		var url = options.url, query = options.query, data = options.data;
 		if (query) {
 			query = io.makeQuery(query) || query;
 		} else {
-			if((!options.method || options.method.toUpperCase() == 'GET') && data) {
+			if((!options.method || noPayload[options.method.toUpperCase()]) && data) {
 				query = io.makeQuery(data);
-				data = null; // we processed it as a query, no need to send it
 			}
 		}
 		if (query) {
@@ -89,7 +90,7 @@
 		},
 		whiteListedProps = Object.keys(propHandlers);
 
-	function xhrRequest (options) {
+	function xhrRequest (options, prep) {
 		var xhr = new XMLHttpRequest(),
 			d = new io.Deferred(function () {
 				// canceller
@@ -116,7 +117,7 @@
 			}
 		}
 		// build a URL
-		var url = io.buildUrl(options);
+		var url = prep.url;
 		// open a connection
 		if ('user' in options) {
 			xhr.open(options.method || 'GET', url, true, options.user || '', options.password || '');
@@ -130,11 +131,7 @@
 			}
 		});
 		// send data, if any
-		var data = options.data || null;
-		if(!options.query && (!options.method || options.method.toUpperCase() == 'GET') && data) {
-			data = null; // we processed it as a query, no need to send it
-		}
-		xhr.send(io.processData(xhr, options, data));
+		xhr.send(io.processData(xhr, options, prep.data));
 		return d.promise || d;
 	}
 
@@ -245,12 +242,9 @@
 	// name - a unique id of a service
 	// priority - a number indicating a priority, services with higher priority
 	//   will be called first. A range of 0-100 is suggested.
-	// callback(options, blacklist) - a function called in the context of
+	// callback(options, prep, level) - a function called in the context of
 	//   a service structure. It should return a correctly formed promise,
 	//   or a falsy value to indicate that the next service should be tried.
-
-	// blacklist - an object/dictionary. Service names that should be ignored
-	//   are included as properties with truthy values. Default: an empty object.
 
 	function byPriority (a, b) { return a.priority - b.priority; }
 
@@ -269,23 +263,30 @@
 		}
 	}
 
-	function request (options, key, blacklist) {
-		blacklist = blacklist || {};
-		key = key || io.makeKey(options);
-		for (var s = io.services, i = s.length - 1; i >= 0; --i) {
-			var service = s[i];
-			if (!blacklist[service.name]) {
-				var result = service.callback(options, key, blacklist);
-				if (result) {
-					return result;
-				}
+	function request (options, prep, level) {
+		prep = prep || io.prepareRequest(options);
+		for (var s = io.services, i = Math.min(s.length - 1, isNaN(level) ? Infinity : level); i >= 0; --i) {
+			var result = s[i].callback(options, prep, i);
+			if (result) {
+				return result;
 			}
 		}
-		return (io.transports[options.transport] || xhrRequest)(options, key, blacklist);
+		return (io.transports[options.transport] || xhrRequest)(options, prep);
 	}
 
 	function makeKey (options) {
 		return io.prefix + (options.method || 'GET') + '-' + io.buildUrl(options);
+	}
+
+	function prepareRequest (options) {
+		var prep  = {url: buildUrl(options)};
+		prep.key  = io.prefix + (options.method || 'GET') + '-' + prep.url;
+		prep.data = options.data || null;
+		if(!options.query && prep.data &&
+				(!options.method || noPayload[options.method.toUpperCase()])) {
+			prep.data = null; // we processed it as a query, no need to send it
+		}
+		return prep;
 	}
 
 
@@ -324,7 +325,8 @@
 	io.processOptions = processOptions;
 	io.processSuccess = processSuccess;
 	io.processFailure = processFailure;
-	io.processData = processData;
+	io.processData    = processData;
+	io.prepareRequest = prepareRequest;
 
 	io.transports = {};
 	io.makeVerb   = makeVerb;

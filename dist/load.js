@@ -4,10 +4,8 @@
 
 	// script handler
 
-	function loadRequest (options) {
-		var url = options.url,
-			query = options.query || options.data,
-			script = document.createElement('script'),
+	function loadRequest (options, prep) {
+		var script = document.createElement('script'),
 			deferred = new io.Deferred();
 		script.onload = function () {
 			deferred.resolve();
@@ -15,7 +13,8 @@
 		script.onerror = function (e) {
 			deferred.reject(new io.FailedIO(null, options, e));
 		};
-		script.src = query ? url + (url.indexOf('?') >= 0 ? '&' : '?') + io.makeQuery(query) : url;
+		script.src = prep.url + (prep.url.indexOf('?') >= 0 ? '&' : '?') +
+			'callback=' + encodeURIComponent(name);
 		document.documentElement.appendChild(script);
 		return deferred.promise || deferred;
 	}

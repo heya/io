@@ -4,7 +4,9 @@
 
 	// cache I/O requests
 
-	function cache (options, key, blacklist) {
+	function cache (options, prep, level) {
+		var key = prep.key;
+
 		if (!io.cache.optIn(options) || options.wait || io.track && io.track.deferred[key]) {
 			return null;
 		}
@@ -16,8 +18,7 @@
 		}
 
 		// pass the request, and cache the result
-		blacklist.cache = 1;
-		var promise = io.request(options, key, blacklist);
+		var promise = io.request(options, prep, level - 1);
 		promise.then(function (result) { saveByKey(key, result); });
 		return promise;
 	}
