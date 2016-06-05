@@ -3,7 +3,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 	// mock I/O requests
 
-	function mock (options) {
+	function mock (options, prep, level) {
 		if (!io.mock.optIn(options)) {
 			return null;
 		}
@@ -23,7 +23,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 			return null;
 		}
 
-		return wrap(options, callback(options));
+		return wrap(options, callback(options, prep, level));
 	}
 
 	function find (url) {
