@@ -48,7 +48,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	function save (options, result) {
 		options = io.processOptions(typeof options == 'string' ?
 			{url: options, method: 'GET'} : options);
-		io.cache.saveByKey(io.makeKey(options));
+		io.cache.saveByKey(io.makeKey(options), result);
 	}
 
 	function remove (options) {

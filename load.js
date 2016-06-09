@@ -18,7 +18,7 @@ define(['./io'], function (io) {
 		return deferred.promise || deferred;
 	}
 
-	io.transports.__load = loadRequest;
+	io.transports.load = loadRequest;
 
-	return io.makeVerb('__load', 'transport');
+	return io.makeVerb('load', 'transport');
 });

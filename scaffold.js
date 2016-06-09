@@ -4,7 +4,7 @@ define([], function () {
 	// service scaffolding
 
 	function defaultOptIn (options) {
-		return !options.method || options.method.toUpperCase() == 'GET';
+		return !options.transport && (!options.method || options.method.toUpperCase() == 'GET');
 	}
 
 	var names = ['theDefault', 'attach', 'detach', 'optIn'];
@@ -16,7 +16,7 @@ define([], function () {
 		var methods = [defaultOptIn, attach, detach, optIn];
 
 		names.forEach(function (name, index) {
-			if (!service[name]) {
+			if (!(name in service)) {
 				service[name] = methods[index];
 			}
 		});
