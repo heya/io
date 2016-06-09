@@ -4,7 +4,7 @@ define(['./track', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) 
 	// bundle I/O requests
 
 	function bundle (options, prep, level) {
-		if (!io.bundle.optIn(options) || options.wait) {
+		if (options.wait || !io.bundle.optIn(options)) {
 			return null;
 		}
 

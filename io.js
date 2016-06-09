@@ -232,8 +232,8 @@ define([], function () {
 		options = io.processOptions(options);
 
 		return io.request(options).
-			then(options.processSuccess || io.processSuccess).
-			catch(options.processFailure || io.processFailure);
+			then(options.processSuccess || io.processSuccess,
+				options.processFailure || io.processFailure);
 	}
 
 

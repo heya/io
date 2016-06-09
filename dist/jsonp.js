@@ -27,7 +27,7 @@
 		return deferred.promise || deferred;
 	}
 
-	io.transports.__jsonp = jsonpRequest;
+	io.transports.jsonp = jsonpRequest;
 
-	return io.makeVerb('__jsonp', 'transport');
+	return io.makeVerb('jsonp', 'transport');
 });

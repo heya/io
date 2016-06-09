@@ -4,7 +4,7 @@
 
 	// mock I/O requests
 
-	function mock (options) {
+	function mock (options, prep, level) {
 		if (!io.mock.optIn(options)) {
 			return null;
 		}
@@ -24,7 +24,7 @@
 			return null;
 		}
 
-		return wrap(options, callback(options));
+		return wrap(options, callback(options, prep, level));
 	}
 
 	function find (url) {

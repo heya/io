@@ -6,7 +6,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	function cache (options, prep, level) {
 		var key = prep.key;
 
-		if (!io.cache.optIn(options) || options.wait || io.track && io.track.deferred[key]) {
+		if (options.wait || io.track && io.track.deferred[key] || !io.cache.optIn(options)) {
 			return null;
 		}
 

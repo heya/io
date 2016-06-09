@@ -7,7 +7,7 @@
 	function cache (options, prep, level) {
 		var key = prep.key;
 
-		if (!io.cache.optIn(options) || options.wait || io.track && io.track.deferred[key]) {
+		if (options.wait || io.track && io.track.deferred[key] || !io.cache.optIn(options)) {
 			return null;
 		}
 
@@ -49,7 +49,7 @@
 	function save (options, result) {
 		options = io.processOptions(typeof options == 'string' ?
 			{url: options, method: 'GET'} : options);
-		io.cache.saveByKey(io.makeKey(options));
+		io.cache.saveByKey(io.makeKey(options), result);
 	}
 
 	function remove (options) {
