@@ -98,7 +98,7 @@ heya.io.mock('/a*', function (options, prep) {
 });
 
 // let's make a call
-io.get('/a/x'),then(function (value) {
+heya.io.get('/a/x'),then(function (value) {
   console.log(value); // 42
 });
 
@@ -108,7 +108,7 @@ heya.io.mock('/b', function (options) {
 });
 
 // let's make another call
-io.get('/b', {q: 1}),then(function (value) {
+heya.io.get('/b', {q: 1}),then(function (value) {
   console.log(value); // 42
 });
 ```
@@ -139,7 +139,7 @@ heya.io.get('/hello').then(function (value) {
 });
 ```
 
-In practicality to support browsers without the standard `Promise`, you may want to use `heya-async`.
+In practicality to support browsers without the standard `Promise`, you may want to use [heya-async](https://github.com/heya/async).
 
 AMD:
 
