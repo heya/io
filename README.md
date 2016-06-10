@@ -5,21 +5,21 @@
 [![devDependencies][dev-deps-image]][dev-deps-url]
 [![NPM version][npm-image]][npm-url]
 
-A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugins.
+A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
 
 Two additional transports are provided:
 
 * `io.jsonp()` &mdash; [JSON-P](http://json-p.org/) requests.
 * `io.load()` &mdash; generate `<script>` tags to include JavaScript files.
 
-Four plugins are included:
+Four services are included:
 
 * `io.cache` &mdash; a transparent application-level cache (supports [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) out of the box).
 * `io.bundle` &mdash; a transparent service to bundle requests into one package passing it to a server, and unbundling a result. It requires a simple server counterpart. [heya-bundler](https://www.npmjs.com/package/heya-bundler) is a reference implementation for node.js/express.js.
 * `io.track` &mdash; a simple plugin to track I/O requests to eliminate duplicates, register an interest without initiating an I/O requests, and much more.
 * `io.mock` &mdash; a way to mock I/O requests without writing a special server courtesy of [Mike Wilcox](https://github.com/clubajax). Very useful for rapid prototyping and writing tests.
 
-As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://www.npmjs.com/package/heya-async): [Deferred](https://github.com/heya/async/wiki/async.Deferred) and [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
+As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://www.npmjs.com/package/heya-async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
 
 # Examples
 
@@ -35,44 +35,24 @@ heya.io.get('/hello', {to: 'world', times: 5}).then(function (value) {
 });
 ```
 
-POST a form with files, and with custom headers:
+POST a form (can include files or any other form elements):
 
 ```js
 var formElement = document.querySelector('form');
-heya.io({
-  url:     '/form',
-  method:  'POST',
-  data:    new FormData(formElement),
-  headers: {'Accept': 'application/xml', 'X-Token': 123}
-}).then(function () { console.log('Done!'); });
-
-// short form without headers:
-// heya.io.post('/form', new FormData(formElement));
+heya.io.post('/form', new FormData(formElement));
 ```
 
 Some other verbs ([REST](https://en.wikipedia.org/wiki/Representational_state_transfer) example):
 
 ```js
-var url;
-// let's create an object
-heya.io.post('/planets', {name: 'Mars', weight: 6e23, radiusInMi: 6012}).
-  then(function (value) {
-    console.log('Object created with id:', value.id);
-    url = '/planets/' + value.id;
-    // oops, the radius value is wrong: correcting
-    return heya.io.patch(url, {radiusInMi: 2106});
-  }).then(function () {
-    // oops, let's redo the whole object
-    return heya.io.put(url, {name: 'Mars', weight: 6e23, radiusInMi: 2016});
-  }).then(function () {
-    // oops, we don't need it at all after all: deleting
-    return heya.io.delete(url);
-  }).then(function () {
-    console.log('All done!');
-  }).catch(function (value) {
-    console.error('Error:', value);
-  });
+function done() { console.log('done'); }
+
+io.post('/things', {name: 'Bob', age: 42}).then(done);
+io.put('/things/5', {name: 'Alice', age: 33}).then(done);
+io.patch('/things/7', {age: 14}).then(done);
+io.remove('/things/3').then(done);
 ```
+
 
 Other transports:
 
@@ -80,11 +60,6 @@ Other transports:
 // let's make a JSON-P call:
 heya.io.jsonp('/planets', {query: 'name'}).then(function (values) {
   console.log('We have ' + values.length + ' planets:', values);
-});
-
-// let's load a JavaScript file
-heya.io.load('/a.js', {ver: 123}).then(function () {
-  console.log('Loaded!');
 });
 ```
 
@@ -113,9 +88,35 @@ heya.io.get('/b', {q: 1}),then(function (value) {
 });
 ```
 
-# Use
+See more examples in the cookbooks:
 
-`heya-io` can be installed with `npm` or `bower`. By default, it uses AMD:
+* [Cookbook: main](https://github.com/heya/io/wiki/Cookbook:-main)
+* Services:
+  * [Cookbook: bundle](https://github.com/heya/io/wiki/Cookbook:-bundle)
+  * [Cookbook: cache](https://github.com/heya/io/wiki/Cookbook:-cache)
+  * [Cookbook: mock](https://github.com/heya/io/wiki/Cookbook:-mock)
+  * [Cookbook: track](https://github.com/heya/io/wiki/Cookbook:-track)
+* Transports:
+  * [Cookbook: jsonp](https://github.com/heya/io/wiki/Cookbook:-jsonp)
+  * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-load)
+
+  # How to install
+
+  With npm:
+
+  ```txt
+  npm install --save heya-io
+  ```
+
+  With bower:
+
+  ```txt
+  bower install --save heya-io
+  ```
+
+# How to use
+
+`heya-io` can be installed with `npm` or `bower` with files available from `node_modules/` or `bower_components/`. By default, it uses AMD:
 
 ```js
 define(['heya-io'], function (io) {
@@ -125,7 +126,7 @@ define(['heya-io'], function (io) {
 });
 ```
 
-But it can be loaded with `<script>` tag from `/dist`:
+But it can be loaded with `<script>` tag from `dist/`:
 
 ```html
 <script src='node_modules/heya-io/dist/io.js'></script>
@@ -139,7 +140,7 @@ heya.io.get('/hello').then(function (value) {
 });
 ```
 
-In practicality to support browsers without the standard `Promise`, you may want to use [heya-async](https://github.com/heya/async).
+To support browsers without the standard `Promise`, you may want to use [heya-async](https://github.com/heya/async).
 
 AMD:
 
@@ -171,19 +172,7 @@ heya.io.get('/hello').then(function (value) {
 });
 ```
 
-# How to install
-
-With npm:
-
-```txt
-npm install --save heya-io
-```
-
-With bower:
-
-```txt
-bower install --save heya-io
-```
+See [How to include](https://github.com/heya/io/wiki/How-to-include) for more details.
 
 # Documentation
 
@@ -191,6 +180,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.0.1 &mdash; *Improved documentation.*
 - 1.0.0 &mdash; *The initial public release as heya-io. Sunset of heya-request. Move from bitbucket.*
 
 # License
