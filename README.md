@@ -100,19 +100,19 @@ See more examples in the cookbooks:
   * [Cookbook: jsonp](https://github.com/heya/io/wiki/Cookbook:-jsonp)
   * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-load)
 
-  # How to install
+# How to install
 
-  With npm:
+With npm:
 
-  ```txt
-  npm install --save heya-io
-  ```
+```txt
+npm install --save heya-io
+```
 
-  With bower:
+With bower:
 
-  ```txt
-  bower install --save heya-io
-  ```
+```txt
+bower install --save heya-io
+```
 
 # How to use
 
@@ -180,6 +180,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.0.2 &mdash; *Fixed formatting errors in README.*
 - 1.0.1 &mdash; *Improved documentation.*
 - 1.0.0 &mdash; *The initial public release as heya-io. Sunset of heya-request. Move from bitbucket.*
 
