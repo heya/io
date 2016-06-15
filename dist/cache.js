@@ -24,8 +24,13 @@
 	}
 
 	function saveByKey (key, result) {
-		if (result instanceof io.Result) {
-			var xhr = result.xhr;
+		var xhr;
+		if (result instanceof XMLHttpRequest || result instanceof FauxXHR) {
+			xhr = result;
+		} else if (result instanceof io.Result) {
+			xhr = result.xhr;
+		}
+		if (xhr) {
 			if (xhr.status >= 200 && xhr.status < 300) {
 				io.cache.storage.store(key, {
 					status:       xhr.status,

@@ -180,6 +180,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.0.4 &mdash& *Regenerated dist.*
 - 1.0.3 &mdash; *Bugfix: cache XHR object directly.*
 - 1.0.2 &mdash; *Fixed formatting errors in README.*
 - 1.0.1 &mdash; *Improved documentation.*
