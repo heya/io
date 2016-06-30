@@ -5,6 +5,7 @@
 	// Faux XHR stand-in to provide a placeholder for cached data
 
 	var isXml = /^(?:application|text)\/(?:x|ht)ml\b/;
+		// isJson = /^application\/json\b/;
 
 	function FauxXHR (cached) {
 		// initialize
@@ -27,7 +28,12 @@
 				this.response = new DOMParser().parseFromString(this.responseText, mime);
 				break;
 			case 'json':
-				this.response = JSON.parse(this.responseText);
+				if ('response' in cached) {
+					this.response = cached.response;
+					this.responseText = JSON.stringify(this.response);
+				} else {
+					this.response = JSON.parse(this.responseText);
+				}
 				break;
 			default:
 				this.response = this.responseText;

@@ -45,7 +45,7 @@
 				status:       200,
 				statusText:   'OK',
 				responseType: 'json',
-				responseText: JSON.stringify(result),
+				response:     result,
 				headers:      'Content-Type: application/json'
 			});
 		}
