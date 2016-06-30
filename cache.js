@@ -44,7 +44,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 				status:       200,
 				statusText:   'OK',
 				responseType: 'json',
-				responseText: JSON.stringify(result),
+				response:     result,
 				headers:      'Content-Type: application/json'
 			});
 		}
