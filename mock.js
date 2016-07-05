@@ -9,13 +9,11 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 		}
 
 		var url = options.url, callback = io.mock.exact[url];
-		findCallback: {
-			if (!callback) {
-				var index = find(url), prefix = io.mock.prefix;
-				if (index < prefix.length && url === prefix[index].url) {
-					callback = prefix[index].callback;
-					break findCallback;
-				}
+		if (!callback) {
+			var index = find(url), prefix = io.mock.prefix;
+			if (index < prefix.length && url === prefix[index].url) {
+				callback = prefix[index].callback;
+			} else {
 				for (var i = index - 1; i >= 0; --i) {
 					var pattern = prefix[i].url;
 					if (pattern.length <= url.length && pattern === url.substring(0, pattern.length)) {
