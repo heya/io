@@ -10,20 +10,23 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 
 		var url = options.url, callback = io.mock.exact[url];
 		findCallback: {
-			if (callback) {
-				break findCallback;
-			}
-			for (var prefix = io.mock.prefix, i = 0; i < prefix.length; ++i) {
-				var pattern = prefix[i].url;
-				if (pattern.length <= url.length && pattern === url.substring(0, pattern.length)) {
-					callback = prefix[i].callback;
+			if (!callback) {
+				var index = find(url), prefix = io.mock.prefix;
+				if (index < prefix.length && url === prefix[index].url) {
+					callback = prefix[index].callback;
 					break findCallback;
 				}
+				for (var i = index - 1; i >= 0; --i) {
+					var pattern = prefix[i].url;
+					if (pattern.length <= url.length && pattern === url.substring(0, pattern.length)) {
+						callback = prefix[i].callback;
+						break;
+					}
+				}
 			}
-			return null;
 		}
 
-		return wrap(options, callback(options, prep, level));
+		return callback ? wrap(options, callback(options, prep, level)) : null;
 	}
 
 	function find (url) {
@@ -31,7 +34,7 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 		var prefix = io.mock.prefix, l = 0, r = prefix.length;
 		while (l < r) {
 			var m = ((r - l) >> 1) + l, x = prefix[m].url;
-			if (x.length > url.length || x.length == url.length && x < url) {
+			if (x < url) {
 				l = m + 1;
 			} else {
 				r = m;
@@ -66,15 +69,13 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 				// prefix
 				url = url.substring(0, url.length - 1);
 				var index = find(url), prefix = io.mock.prefix;
-				if (index < prefix.length) {
-					if (url === prefix[index].url) {
-						if (callback) {
-							prefix[index].callback = callback;
-						} else {
-							prefix.splice(index, 1);
-						}
-						return;
+				if (index < prefix.length && url === prefix[index].url) {
+					if (callback) {
+						prefix[index].callback = callback;
+					} else {
+						prefix.splice(index, 1);
 					}
+					return;
 				}
 				prefix.splice(index, 0, {url: url, callback: callback});
 			} else {
