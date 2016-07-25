@@ -5,6 +5,7 @@
 	// the I/O powerhouse
 
 	function Result (xhr, options, event) { this.xhr = xhr; this.options = options; this.event = event; }
+	Result.prototype = {getData: function () { return getData(this.xhr); }};
 	function FailedIO () { Result.apply(this, arguments); }
 	FailedIO.prototype = Object.create(Result.prototype);
 	function TimedOut () { FailedIO.apply(this, arguments); }
@@ -169,6 +170,23 @@
 		return options;
 	}
 
+	function getData (xhr) {
+		if (xhr.status === 204) {
+			// no body was sent
+			return; // return undefined
+		}
+		if (xhr.responseType) {
+			return xhr.response;
+		}
+		if (xhr.responseXML) {
+			return xhr.responseXML;
+		}
+		if (isJson.test(xhr.getResponseHeader('Content-Type'))) {
+			return JSON.parse(xhr.responseText);
+		}
+		return xhr.responseText;
+	}
+
 	function processSuccess (result) {
 		if (!(result instanceof io.Result)) {
 			return result;
@@ -179,20 +197,11 @@
 		if (result.options.returnXHR) {
 			return result.xhr;
 		}
-		if (result.xhr.status === 204 || (result.options.method && result.options.method.toUpperCase() === 'HEAD')) {
+		if (result.options.method && result.options.method.toUpperCase() === 'HEAD') {
 			// no body was sent
 			return; // return undefined
 		}
-		if (result.xhr.responseType) {
-			return result.xhr.response;
-		}
-		if (result.xhr.responseXML) {
-			return result.xhr.responseXML;
-		}
-		if (isJson.test(result.xhr.getResponseHeader('Content-Type'))) {
-			return JSON.parse(result.xhr.responseText);
-		}
-		return result.xhr.responseText;
+		return getData(result.xhr);
 	}
 
 	function processFailure (failure) {

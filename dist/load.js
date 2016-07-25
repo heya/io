@@ -13,8 +13,7 @@
 		script.onerror = function (e) {
 			deferred.reject(new io.FailedIO(null, options, e));
 		};
-		script.src = prep.url + (prep.url.indexOf('?') >= 0 ? '&' : '?') +
-			'callback=' + encodeURIComponent(name);
+		script.src = prep.url;
 		document.documentElement.appendChild(script);
 		return deferred.promise || deferred;
 	}
