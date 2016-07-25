@@ -180,6 +180,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.0.6 &mdash; *Added a helper to extract data from XHR in case of errors.*
 - 1.0.5 &mdash; *XHR can be reinstated from a JSON object, not just a string.*
 - 1.0.4 &mdash; *Regenerated dist.*
 - 1.0.3 &mdash; *Bugfix: cache XHR object directly.*
