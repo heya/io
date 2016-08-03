@@ -289,7 +289,7 @@ define([], function () {
 	}
 
 	function prepareRequest (options) {
-		var prep  = {url: buildUrl(options)};
+		var prep  = {url: io.buildUrl(options)};
 		prep.key  = io.prefix + (options.method || 'GET') + '-' + prep.url;
 		prep.data = options.data || null;
 		if(!options.query && prep.data &&
