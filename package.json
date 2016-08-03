@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Intelligent I/O for browsers.",
   "main": "index.js",
   "directories": {
@@ -42,6 +42,7 @@
     "./mock": "!heya.io",
     "./track": "!heya.io",
     "./cache": "!heya.io",
-    "./bundle": "!heya.io"
+    "./bundle": "!heya.io",
+    "./bust": "!heya.io"
   }
 }
