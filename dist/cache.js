@@ -7,7 +7,9 @@
 	function cache (options, prep, level) {
 		var key = prep.key;
 
-		if (options.wait || io.track && io.track.deferred[key] || !io.cache.optIn(options)) {
+		if (options.wait || options.bust ||
+				io.track && io.track.deferred[key] ||
+				!io.cache.optIn(options)) {
 			return null;
 		}
 
