@@ -48,10 +48,10 @@ Some other verbs ([REST](https://en.wikipedia.org/wiki/Representational_state_tr
 ```js
 function done() { console.log('done'); }
 
-io.post('/things', {name: 'Bob', age: 42}).then(done);
-io.put('/things/5', {name: 'Alice', age: 33}).then(done);
-io.patch('/things/7', {age: 14}).then(done);
-io.remove('/things/3').then(done);
+heya.io.post('/things', {name: 'Bob', age: 42}).then(done);
+heya.io.put('/things/5', {name: 'Alice', age: 33}).then(done);
+heya.io.patch('/things/7', {age: 14}).then(done);
+heya.io.remove('/things/3').then(done);
 ```
 
 
@@ -74,7 +74,7 @@ heya.io.mock('/a*', function (options, prep) {
 });
 
 // let's make a call
-heya.io.get('/a/x'),then(function (value) {
+heya.io.get('/a/x').then(function (value) {
   console.log(value); // 42
 });
 
@@ -84,7 +84,7 @@ heya.io.mock('/b', function (options) {
 });
 
 // let's make another call
-heya.io.get('/b', {q: 1}),then(function (value) {
+heya.io.get('/b', {q: 1}).then(function (value) {
   console.log(value); // 42
 });
 ```
