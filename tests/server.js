@@ -46,7 +46,20 @@ app.all('/api', function (req, res) {
 			now: Date.now(),
 			counter: counter++
 		};
-	res.jsonp(data);
+	var timeout = 0;
+	if (req.query.timeout) {
+		var timeout = parseInt(req.query.timeout, 10);
+		if (isNaN(timeout) || timeout < 0 || timeout > 60000) {
+			timeout = 0;
+		}
+	}
+	if (timeout) {
+		setTimeout(function () {
+			res.jsonp(data);
+		}, timeout);
+	} else {
+		res.jsonp(data);
+	}
 });
 
 app.put('/bundle', bundler({
