@@ -181,6 +181,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.0.9 &mdash; *Correcting typos in README. New version of a test server.*
 - 1.0.8 &mdash; *Add a helper for busting browser cache.*
 - 1.0.7 &mdash; *Regenerated dist.*
 - 1.0.6 &mdash; *Added a helper to extract data from XHR in case of errors.*
