@@ -10,7 +10,7 @@ A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of 
 Five services are included:
 
 * `io.cache` &mdash; a transparent application-level cache (supports [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) out of the box).
-* `io.bundle` &mdash; a transparent service to bundle requests into one package passing it to a server, and unbundling a result. It requires a simple server counterpart. [heya-bundler](https://www.npmjs.com/package/heya-bundler) is a reference implementation for node.js/express.js.
+* `io.bundle` &mdash; a transparent service to bundle requests into one package passing it to a server, and unbundling a result. It requires a simple server counterpart. [heya-bundler](https://github.com/heya/bundler) is a reference implementation for node.js/express.js.
 * `io.track` &mdash; a simple plugin to track I/O requests to eliminate duplicates, register an interest without initiating an I/O requests, and much more.
 * `io.mock` &mdash; a way to mock I/O requests without writing a special server courtesy of [Mike Wilcox](https://github.com/clubajax). Very useful for rapid prototyping and writing tests.
 * `io.bust` &mdash; a simple plugin to generate a randomized query value to bust browser's cache.
@@ -20,7 +20,7 @@ Two additional transports are provided:
 * `io.jsonp()` &mdash; [JSON-P](http://json-p.org/) requests.
 * `io.load()` &mdash; generate `<script>` tags to include JavaScript files.
 
-As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://www.npmjs.com/package/heya-async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
+As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://github.com/heya/async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
 
 # Examples
 
