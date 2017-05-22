@@ -6,7 +6,7 @@ define(['./io'], function (io) {
 
 	var counter = 0;
 
-	function jsonpRequest (options, prep) {
+	function jsonpTransport (options, prep) {
 		var callback = options.callback || 'callback',
 			name = '__io_jsonp_callback_' + (counter++),
 			script = document.createElement('script'),
@@ -27,7 +27,7 @@ define(['./io'], function (io) {
 		return deferred.promise || deferred;
 	}
 
-	io.transports.jsonp = jsonpRequest;
+	io.transports.jsonp = jsonpTransport;
 
 	return io.makeVerb('jsonp', 'transport');
 });

@@ -91,7 +91,7 @@
 		},
 		whiteListedProps = Object.keys(propHandlers);
 
-	function xhrRequest (options, prep) {
+	function xhrTransport (options, prep) {
 		var xhr = new XMLHttpRequest(),
 			d = new io.Deferred(function () {
 				// canceller
@@ -284,7 +284,7 @@
 				return result;
 			}
 		}
-		return (io.transports[options.transport] || xhrRequest)(options, prep);
+		return (io.transports[options.transport] || io.defaultTransport)(options, prep);
 	}
 
 	function makeKey (options) {
@@ -341,6 +341,7 @@
 	io.processData    = processData;
 	io.prepareRequest = prepareRequest;
 
+	io.defaultTransport = io.xhrTransport = xhrTransport;
 	io.transports = {};
 	io.makeVerb   = makeVerb;
 
