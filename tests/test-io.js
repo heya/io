@@ -1,6 +1,10 @@
 define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (module, unit, io, Deferred) {
 	'use strict';
 
+	var isXml = /^application\/xml\b/,
+		isOctetStream = /^application\/octet-stream\b/,
+		isMultiPart = /^multipart\/form-data\b/;
+
 	unit.add(module, [
 		function test_setup () {
 			io.Deferred = Deferred;
@@ -96,7 +100,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				eval(t.TEST('data.nodeType == 9'));
 				return io.post('http://localhost:3000/api', data);
 			}).then(function (data) {
-				eval(t.TEST('/^application\\/xml\\b/.exec(data.headers["content-type"])'));
+				eval(t.TEST('isXml.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -132,7 +136,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				eval(t.TEST('data instanceof Blob'));
 				return io.post('http://localhost:3000/api', data);
 			}).then(function (data) {
-				eval(t.TEST('/^application\\/xml\\b/.exec(data.headers["content-type"])'));
+				eval(t.TEST('isXml.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -146,7 +150,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				eval(t.TEST('data instanceof ArrayBuffer'));
 				return io.post('http://localhost:3000/api', data);
 			}).then(function (data) {
-				eval(t.TEST('/^application\\/octet-stream\\b/.exec(data.headers["content-type"])'));
+				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -158,7 +162,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 			var data = new FormData(div.firstChild);
 			data.append('user', 'heh!');
 			io.post('http://localhost:3000/api', data).then(function (data) {
-				eval(t.TEST('/^multipart\\/form-data\\b/.exec(data.headers["content-type"])'));
+				eval(t.TEST('isMultiPart.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
