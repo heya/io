@@ -2,6 +2,7 @@ define(['./io'], function (io) {
 	'use strict';
 
 	// JSONP handler
+	// This is a browser-only module.
 
 	var counter = 0;
 

@@ -2,7 +2,7 @@
   "name": "heya-io",
   "version": "1.0.9",
   "description": "Intelligent I/O for browsers.",
-  "main": "index.js",
+  "main": "main.js",
   "directories": {
     "test": "tests"
   },

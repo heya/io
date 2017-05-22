@@ -1,4 +1,5 @@
-define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
+/* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
+(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 	'use strict';
 
 	// mock I/O requests

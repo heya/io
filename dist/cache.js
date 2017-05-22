@@ -3,6 +3,7 @@
 	'use strict';
 
 	// cache I/O requests
+	// this is a browser-only module.
 
 	function cache (options, prep, level) {
 		var key = prep.key;

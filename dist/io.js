@@ -145,16 +145,18 @@
 		if (!options.method || options.method == 'GET') {
 			return null; // ignore payload for GET
 		}
+		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
 			switch (true) {
 				case typeof FormData != 'undefined' && data instanceof FormData:
-				case typeof ArrayBuffer != 'undefined' && data instanceof ArrayBuffer:
-				case typeof Blob != 'undefined' && data instanceof Blob:
 				case typeof Document != 'undefined' && data instanceof Document:
+				case typeof Blob != 'undefined' && data instanceof Blob:
 					return data; // do not process well-known types
+				case typeof ArrayBuffer != 'undefined' && data instanceof ArrayBuffer:
+					!contentType && xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+					return data;
 			}
 		}
-		var contentType = options.headers && options.headers['Content-Type'];
 		if (!contentType) {
 			if (data && typeof data == 'object') {
 				xhr.setRequestHeader('Content-Type', 'application/json');

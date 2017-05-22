@@ -2,6 +2,7 @@ define(['./io'], function (io) {
 	'use strict';
 
 	// script handler
+	// This is a browser-only module.
 
 	function loadRequest (options, prep) {
 		var script = document.createElement('script'),
