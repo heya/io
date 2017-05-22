@@ -165,7 +165,7 @@ define(['module', 'heya-unit', 'heya-io/mock', 'heya-async/Deferred', 'heya-asyn
 				x.done();
 			});
 		},
-		function test_teardownp () {
+		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 			io.mock.detach();
 		}

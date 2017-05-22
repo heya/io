@@ -94,6 +94,9 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				eval(t.TEST('typeof data == "object"'));
 				eval(t.TEST('data.nodeName == "#document"'));
 				eval(t.TEST('data.nodeType == 9'));
+				return io.post('http://localhost:3000/api', data);
+			}).then(function (data) {
+				eval(t.TEST('/^application\\/xml\\b/.exec(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -127,6 +130,9 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				responseType: 'blob'
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof Blob'));
+				return io.post('http://localhost:3000/api', data);
+			}).then(function (data) {
+				eval(t.TEST('/^application\\/xml\\b/.exec(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -138,10 +144,25 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				responseType: 'arraybuffer'
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof ArrayBuffer'));
+				return io.post('http://localhost:3000/api', data);
+			}).then(function (data) {
+				eval(t.TEST('/^application\\/octet-stream\\b/.exec(data.headers["content-type"])'));
 				x.done();
 			});
 		},
-		function test_teardownp () {
+		function test_io_post_formdata (t) {
+			if (typeof FormData == 'undefined') return;
+			var x = t.startAsync();
+			var div = document.createElement('div');
+			div.innerHTML = '<form><input type="hidden" name="a", value="1"></form>';
+			var data = new FormData(div.firstChild);
+			data.append('user', 'heh!');
+			io.post('http://localhost:3000/api', data).then(function (data) {
+				eval(t.TEST('/^multipart\\/form-data\\b/.exec(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 		}
 	]);

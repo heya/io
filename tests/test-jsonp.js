@@ -34,7 +34,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/jsonp', 'heya-async/Deferr
 				x.done();
 			});
 		},
-		function test_teardownp () {
+		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 		}
 	]);

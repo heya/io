@@ -30,7 +30,7 @@ define(['module', 'heya-unit', 'heya-io/track', 'heya-async/Deferred-ext'], func
 				x.done();
 			});
 		},
-		function test_teardownp () {
+		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 			io.track.detach();
 		}
