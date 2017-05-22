@@ -43,6 +43,7 @@
     "./track": "!heya.io",
     "./cache": "!heya.io",
     "./bundle": "!heya.io",
-    "./bust": "!heya.io"
+    "./bust": "!heya.io",
+    "./fetch": "!heya.io"
   }
 }
