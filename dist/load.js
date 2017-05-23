@@ -5,7 +5,7 @@
 	// script handler
 	// This is a browser-only module.
 
-	function loadRequest (options, prep) {
+	function loadTransport (options, prep) {
 		var script = document.createElement('script'),
 			deferred = new io.Deferred();
 		script.onload = function () {
@@ -19,7 +19,7 @@
 		return deferred.promise || deferred;
 	}
 
-	io.transports.load = loadRequest;
+	io.transports.load = loadTransport;
 
 	return io.makeVerb('load', 'transport');
 });
