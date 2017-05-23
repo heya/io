@@ -5,7 +5,7 @@
 [![devDependencies][dev-deps-image]][dev-deps-url]
 [![NPM version][npm-image]][npm-url]
 
-A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
+A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
 
 Five services are included:
 
@@ -18,7 +18,8 @@ Five services are included:
 Two additional transports are provided:
 
 * `io.jsonp()` &mdash; [JSON-P](http://json-p.org/) requests.
-* `io.load()` &mdash; generate `<script>` tags to include JavaScript files.
+* `io.load()` &mdash; generates `<script>` tags to include JavaScript files.
+* `io.fetch()` &mdash; replaces `XHR` with `fetch()`-based transport.
 
 As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://github.com/heya/async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
 
@@ -100,6 +101,7 @@ See more examples in the cookbooks:
 * Transports:
   * [Cookbook: jsonp](https://github.com/heya/io/wiki/Cookbook:-jsonp)
   * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-load)
+  * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-fetch)
 
 # How to install
 
@@ -181,6 +183,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.1.0 &mdash; *Added fetch() as an alternative default transport.*
 - 1.0.9 &mdash; *Correcting typos in README. New version of a test server.*
 - 1.0.8 &mdash; *Add a helper for busting browser cache.*
 - 1.0.7 &mdash; *Regenerated dist.*
@@ -202,6 +205,6 @@ BSD or AFL &mdash; your choice.
 [deps-image]:     https://img.shields.io/david/heya/io.svg
 [deps-url]:       https://david-dm.org/heya/io
 [dev-deps-image]: https://img.shields.io/david/dev/heya/io.svg
-[dev-deps-url]:   https://david-dm.org/heya/io#info=devDependencies
+[dev-deps-url]:   https://david-dm.org/heya/io?type=dev
 [travis-image]:   https://img.shields.io/travis/heya/io.svg
 [travis-url]:     https://travis-ci.org/heya/io
