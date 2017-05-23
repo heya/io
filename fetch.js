@@ -38,7 +38,7 @@ define(['./io', './FauxXHR'], function (io, FauxXHR) {
 			return new io.Result(new FauxXHR({
 				status: response.status,
 				statusText: response.statusText,
-				headers: getAllResponseHeaders(response.headers),
+				headers: getAllResponseHeaders(response.headers, options.mime),
 				responseType: options.responseType,
 				responseText: body
 			}), options);
@@ -79,11 +79,20 @@ define(['./io', './FauxXHR'], function (io, FauxXHR) {
 		return false;
 	}
 
-	function getAllResponseHeaders (headers) {
+	function getAllResponseHeaders (headers, mime) {
 		try {
 			var h = [];
-			for (var pair of headers) {
-				h.push(pair[0] + ': ' + pair[1]);
+			if (mime) {
+				for (var pair of headers) {
+					if (pair[0].toLowerCase() !== 'content-type') {
+						h.push(pair[0] + ': ' + pair[1]);
+					}
+				}
+				h.push('Content-Type: ' + mime);
+			} else {
+				for (var pair of headers) {
+					h.push(pair[0] + ': ' + pair[1]);
+				}
 			}
 			return h.join('\n');
 		} catch (e) {

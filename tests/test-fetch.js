@@ -107,17 +107,17 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/fetch'], function (module,
 				x.done();
 			});
 		},
-		// function test_io_get_xml_as_text_mime (t) {
-		// 	var x = t.startAsync();
-		// 	io.get({
-		// 		url: 'http://localhost:3000/api',
-		// 		mime: 'text/plain'
-		// 	}, {payloadType: 'xml'}).then(function (data) {
-		// 		eval(t.TEST('typeof data == "string"'));
-		// 		eval(t.TEST('data == "<div>Hello, world!</div>"'));
-		// 		x.done();
-		// 	});
-		// },
+		function test_io_get_xml_as_text_mime (t) {
+			var x = t.startAsync();
+			io.get({
+				url: 'http://localhost:3000/api',
+				mime: 'text/plain'
+			}, {payloadType: 'xml'}).then(function (data) {
+				eval(t.TEST('typeof data == "string"'));
+				eval(t.TEST('data == "<div>Hello, world!</div>"'));
+				x.done();
+			});
+		},
 		function test_io_get_xml_as_text (t) {
 			var x = t.startAsync();
 			io.get({
