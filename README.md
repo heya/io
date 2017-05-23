@@ -101,7 +101,7 @@ See more examples in the cookbooks:
 * Transports:
   * [Cookbook: jsonp](https://github.com/heya/io/wiki/Cookbook:-jsonp)
   * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-load)
-  * [Cookbook: load](https://github.com/heya/io/wiki/Cookbook:-fetch)
+  * [Cookbook: fetch](https://github.com/heya/io/wiki/Cookbook:-fetch)
 
 # How to install
 
