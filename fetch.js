@@ -10,12 +10,12 @@ define(['./io', './FauxXHR'], function (io, FauxXHR) {
 		var headers = new Headers(options.headers || {}),
 			req = {
 				method: options.method,
-				mode: options.fetchMode || io.fetch.defaultMode,
-				cache: options.fetchCache || io.fetch.defaultCache,
-				redirect: options.fetchRedirect || io.fetch.defaultRedirect,
-				referrer: options.fetchReferrer || io.fetch.defaultReferrer,
-				referrerPolicy: options.fetchReferrerPolicy || io.fetch.defaultReferrerPolicy,
-				credentials: options.fetchCredentials || (('withCredentials' in options) &&
+				mode: typeof options.fetchMode == 'string' || io.fetch.defaultMode,
+				cache: typeof options.fetchCache == 'string' || io.fetch.defaultCache,
+				redirect: typeof options.fetchRedirect == 'string' || io.fetch.defaultRedirect,
+				referrer: typeof options.fetchReferrer == 'string' || io.fetch.defaultReferrer,
+				referrerPolicy: typeof options.fetchReferrerPolicy == 'string' || io.fetch.defaultReferrerPolicy,
+				credentials: typeof options.fetchCredentials == 'string' || (('withCredentials' in options) &&
 					(options.withCredentials ? 'include' : 'same-origin')) || io.fetch.defaultCredentials
 			}, response;
 		if (options.fetchIntegrity) req.integrity = options.fetchIntegrity;
