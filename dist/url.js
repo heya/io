@@ -1,5 +1,5 @@
-(function(_,f){window.heya.io.url=f(window.heya.io,window.heya.io.scaffold);})
-(['./io', './scaffold'], function (io, scaffold) {
+(function(_,f,g){g=window;g=g.heya||(g.heya={});g=g.io||(g.io={});g.url=f();})
+([], function () {
 	'use strict';
 
 	return function url (parts) {
