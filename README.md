@@ -21,6 +21,10 @@ Two additional transports are provided:
 * `io.load()` &mdash; generates `<script>` tags to include JavaScript files.
 * `io.fetch()` &mdash; replaces `XHR` with `fetch()`-based transport.
 
+Utilities:
+
+* `url()` &mdash; uses ES6 tagged literals to form properly sanitized URLs.
+
 As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://github.com/heya/async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
 
 # Examples
@@ -33,6 +37,7 @@ heya.io.get('http://example.com/hello').then(function (value) {
 });
 
 heya.io.get('/hello', {to: 'world', times: 5}).then(function (value) {
+  // GET /hello?to=world&times=5
   console.log(value);
 });
 ```
@@ -60,6 +65,7 @@ Other transports:
 ```js
 // let's make a JSON-P call:
 heya.io.jsonp('/planets', {query: 'name'}).then(function (values) {
+  // GET /planets?query=name
   console.log('We have ' + values.length + ' planets:', values);
 });
 ```
