@@ -55,7 +55,6 @@ heya.io.patch('/things/7', {age: 14}).then(done);
 heya.io.remove('/things/3').then(done);
 ```
 
-
 Other transports:
 
 ```js
@@ -87,6 +86,16 @@ heya.io.mock('/b', function (options) {
 // let's make another call
 heya.io.get('/b', {q: 1}).then(function (value) {
   console.log(value); // 42
+});
+```
+
+Using `url` template to sanitize URLs (ES6):
+
+```js
+const client = 'Bob & Jordan & Co';
+heya.io.get(url`/api/${client}/details`).then(function (value) {
+  // GET /api/Bob%20%26%20Jordan%20%26%20Co/details
+  console.log(value);
 });
 ```
 
@@ -183,6 +192,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.1.1 &mdash; *Added `url` tagged literals (an ES6 feature).*
 - 1.1.0 &mdash; *Added fetch() as an alternative default transport.*
 - 1.0.9 &mdash; *Correcting typos in README. New version of a test server.*
 - 1.0.8 &mdash; *Add a helper for busting browser cache.*
