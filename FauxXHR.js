@@ -14,20 +14,20 @@
 		}.bind(this));
 		// create response, if required
 		var mime = this.getResponseHeader('Content-Type');
-		switch (this.responseType) {
-			case 'arraybuffer':
+		switch (true) {
+			case typeof ArrayBuffer != 'undefined' && this.responseType === 'arraybuffer':
 				this.response = new ArrayBuffer(2 * this.responseText.length);
 				for (var view = new Uint16Array(this.response), i = 0, n = this.responseText.length; i < n; ++i) {
 					view[i] = this.responseText.charCodeAt(i);
 				}
 				break;
-			case 'blob':
+			case typeof Blob != 'undefined' && this.responseType === 'blob':
 				this.response = new Blob([this.responseText], {type: mime});
 				break;
-			case 'document':
+			case typeof DOMParser != 'undefined' && this.responseType === 'document':
 				this.response = new DOMParser().parseFromString(this.responseText, mime);
 				break;
-			case 'json':
+			case this.responseType === 'json':
 				if ('response' in cached) {
 					this.response = cached.response;
 					this.responseText = JSON.stringify(this.response);
@@ -42,7 +42,7 @@
 		this.responseXML = null;
 		if (this.responseType == 'document') {
 			this.responseXML = this.response;
-		} else {
+		} else if (typeof DOMParser != 'undefined') {
 			var xmlMime = isXml.exec(mime);
 			if (xmlMime) {
 				this.responseXML = new DOMParser().parseFromString(this.responseText, xmlMime[0]);
