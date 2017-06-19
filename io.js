@@ -146,6 +146,14 @@
 		if (!options.method || requestHasNoBody[options.method]) {
 			return null; // ignore payload for GET & HEAD
 		}
+		if (data && typeof data == 'object') {
+			for (var i = 0; i < io.dataProcessors.length; i += 2) {
+				if (data instanceof io.dataProcessors[i]) {
+					data = io.dataProcessors[i + 1](xhr, options, data);
+					break;
+				}
+			}
+		}
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
 			switch (true) {
@@ -180,6 +188,24 @@
 		}
 		if (xhr.responseType) {
 			return xhr.response;
+		}
+		var contentType = xhr.getResponseHeader('Content-Type');
+		for (var i = 0; i < io.mimeProcessors.length; i += 2) {
+			var mime = mimeProcessors[i], flag;
+			if (typeof mime == 'string') {
+				flag = mime === contentType;
+			} else if (mime instanceof RegExp) {
+				flag = mime.test(contentType);
+			} else { // function
+				flag = mime(contentType);
+			}
+			if (flag) {
+				var result = mimeProcessors[i + 1](xhr, contentType);
+				if (result !== undefined) {
+					return result;
+				}
+				break;
+			}
 		}
 		if (xhr.responseXML) {
 			return xhr.responseXML;
@@ -341,6 +367,8 @@
 	io.processFailure = processFailure;
 	io.processData    = processData;
 	io.prepareRequest = prepareRequest;
+	io.dataProcessors = [];
+	io.mimeProcessors = [];
 
 	io.defaultTransport = io.xhrTransport = xhrTransport;
 	io.transports = {};
