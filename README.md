@@ -200,6 +200,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.1.2 &mdash; *Minor fixes for non-browser environments. New alias and verb.*
 - 1.1.1 &mdash; *Added `url` tagged literals (an ES6 feature).*
 - 1.1.0 &mdash; *Added fetch() as an alternative default transport.*
 - 1.0.9 &mdash; *Correcting typos in README. New version of a test server.*

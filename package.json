@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Intelligent I/O for browsers.",
   "main": "main.js",
   "directories": {
