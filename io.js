@@ -142,8 +142,8 @@
 		if (!options.headers || !options.headers.Accept) {
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
-		if (!options.method || options.method == 'GET') {
-			return null; // ignore payload for GET
+		if (!options.method || options.method == 'GET' || options.method == 'HEAD') {
+			return null; // ignore payload for GET & HEAD
 		}
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
@@ -316,10 +316,10 @@
 		};
 	}
 
-	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(function (verb) {
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'].forEach(function (verb) {
 		io[verb.toLowerCase()] = makeVerb(verb);
 	});
-	io.remove = io['delete']; // alias for simplicity
+	io.del = io.remove = io['delete']; // alias for simplicity
 
 
 	// export
