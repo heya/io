@@ -55,14 +55,15 @@
 		return query.join('&');
 	}
 
-	var noPayload = {GET: 1, HEAD: 1};
+	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1},
+		responseHasNoBody = {HEAD: 1, OPTIONS: 1};
 
 	function buildUrl (options) {
 		var url = options.url, query = options.query, data = options.data;
 		if (query) {
 			query = io.makeQuery(query) || query;
 		} else {
-			if((!options.method || noPayload[options.method.toUpperCase()]) && data) {
+			if((!options.method || requestHasNoBody[options.method.toUpperCase()]) && data) {
 				query = io.makeQuery(data);
 			}
 		}
@@ -136,15 +137,13 @@
 		return d.promise || d;
 	}
 
-	var isJson = /^application\/json\b/,
-		requestHasNoBody = {GET: 1, HEAD: 1, OPTIONS: 1},
-		responseHasNoBody= {HEAD: 1, OPTIONS: 1};
+	var isJson = /^application\/json\b/;
 
 	function processData (xhr, options, data) {
 		if (!options.headers || !options.headers.Accept) {
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
-		if (!options.method || requestHasNoBody[options.method] === 1) {
+		if (!options.method || requestHasNoBody[options.method]) {
 			return null; // ignore payload for GET & HEAD
 		}
 		var contentType = options.headers && options.headers['Content-Type'];
@@ -201,7 +200,7 @@
 		if (result.options.returnXHR) {
 			return result.xhr;
 		}
-		if (result.options.method && responseHasNoBody[result.options.method.toUpperCase()] === 1) {
+		if (result.options.method && responseHasNoBody[result.options.method.toUpperCase()]) {
 			// no body was sent
 			return; // return undefined
 		}
@@ -298,7 +297,7 @@
 		prep.key  = io.prefix + (options.method || 'GET') + '-' + prep.url;
 		prep.data = options.data || null;
 		if(!options.query && prep.data &&
-				(!options.method || noPayload[options.method.toUpperCase()])) {
+				(!options.method || requestHasNoBody[options.method.toUpperCase()])) {
 			prep.data = null; // we processed it as a query, no need to send it
 		}
 		return prep;
