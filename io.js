@@ -136,13 +136,15 @@
 		return d.promise || d;
 	}
 
-	var isJson = /^application\/json\b/;
+	var isJson = /^application\/json\b/,
+		requestHasNoBody = {GET: 1, HEAD: 1, OPTIONS: 1},
+		responseHasNoBody= {HEAD: 1, OPTIONS: 1};
 
 	function processData (xhr, options, data) {
 		if (!options.headers || !options.headers.Accept) {
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
-		if (!options.method || options.method == 'GET' || options.method == 'HEAD') {
+		if (!options.method || requestHasNoBody[options.method] === 1) {
 			return null; // ignore payload for GET & HEAD
 		}
 		var contentType = options.headers && options.headers['Content-Type'];
@@ -199,7 +201,7 @@
 		if (result.options.returnXHR) {
 			return result.xhr;
 		}
-		if (result.options.method && result.options.method.toUpperCase() === 'HEAD') {
+		if (result.options.method && responseHasNoBody[result.options.method.toUpperCase()] === 1) {
 			// no body was sent
 			return; // return undefined
 		}
