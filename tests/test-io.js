@@ -166,6 +166,25 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				x.done();
 			});
 		},
+		function test_io_custom_mime_processor (t) {
+		    var x = t.startAsync();
+		    var restoreOriginal = io.mimeProcessors;
+		    io.mimeProcessors = [];
+			io.mimeProcessors.push(function(contentType){
+				return contentType === 'text/plain; charset=utf-8';
+			});
+			io.mimeProcessors.push(function(xhr, contentType){
+				eval(t.TEST('contentType === "text/plain; charset=utf-8"'));
+				eval(t.TEST('xhr.responseText == "Hello, world!"'));
+				return 'Custom Parser Result';
+			});
+			io.get('http://localhost:3000/api', {payloadType: 'txt'}).then(function (data) {
+				eval(t.TEST('typeof data == "string"'));
+				eval(t.TEST('data === "Custom Parser Result"'));
+				io.mimeProcessors = restoreOriginal;
+				x.done();
+			});
+		},
 		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 		}
