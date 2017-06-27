@@ -191,12 +191,12 @@
 		}
 		var contentType = xhr.getResponseHeader('Content-Type');
 		mimeLoop: for (var i = 0; i < io.mimeProcessors.length; i += 2) {
-			var mime = mimeProcessors[i], result;
+			var mime = io.mimeProcessors[i], result;
 			switch (true) {
 				case mime instanceof RegExp && mime.test(contentType):
 				case typeof mime == 'function' && !!mime(contentType):
 				case typeof mime == 'string' && mime === contentType:
-					result = mimeProcessors[i + 1](xhr, contentType);
+					result = io.mimeProcessors[i + 1](xhr, contentType);
 					if (result !== undefined) {
 						return result;
 					}
