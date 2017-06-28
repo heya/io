@@ -55,14 +55,15 @@
 		return query.join('&');
 	}
 
-	var noPayload = {GET: 1, HEAD: 1};
+	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1},
+		responseHasNoBody = {HEAD: 1, OPTIONS: 1};
 
 	function buildUrl (options) {
 		var url = options.url, query = options.query, data = options.data;
 		if (query) {
 			query = io.makeQuery(query) || query;
 		} else {
-			if((!options.method || noPayload[options.method.toUpperCase()]) && data) {
+			if((!options.method || requestHasNoBody[options.method.toUpperCase()]) && data) {
 				query = io.makeQuery(data);
 			}
 		}
@@ -142,8 +143,16 @@
 		if (!options.headers || !options.headers.Accept) {
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
-		if (!options.method || options.method == 'GET') {
-			return null; // ignore payload for GET
+		if (!options.method || requestHasNoBody[options.method]) {
+			return null; // ignore payload for GET & HEAD
+		}
+		if (data && typeof data == 'object') {
+			for (var i = 0; i < io.dataProcessors.length; i += 2) {
+				if (data instanceof io.dataProcessors[i]) {
+					data = io.dataProcessors[i + 1](xhr, options, data);
+					break;
+				}
+			}
 		}
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
@@ -180,6 +189,20 @@
 		if (xhr.responseType) {
 			return xhr.response;
 		}
+		var contentType = xhr.getResponseHeader('Content-Type');
+		mimeLoop: for (var i = 0; i < io.mimeProcessors.length; i += 2) {
+			var mime = io.mimeProcessors[i], result;
+			switch (true) {
+				case mime instanceof RegExp && mime.test(contentType):
+				case typeof mime == 'function' && !!mime(contentType):
+				case typeof mime == 'string' && mime === contentType:
+					result = io.mimeProcessors[i + 1](xhr, contentType);
+					if (result !== undefined) {
+						return result;
+					}
+					break mimeLoop;
+			}
+		}
 		if (xhr.responseXML) {
 			return xhr.responseXML;
 		}
@@ -199,7 +222,7 @@
 		if (result.options.returnXHR) {
 			return result.xhr;
 		}
-		if (result.options.method && result.options.method.toUpperCase() === 'HEAD') {
+		if (result.options.method && responseHasNoBody[result.options.method.toUpperCase()]) {
 			// no body was sent
 			return; // return undefined
 		}
@@ -296,7 +319,7 @@
 		prep.key  = io.prefix + (options.method || 'GET') + '-' + prep.url;
 		prep.data = options.data || null;
 		if(!options.query && prep.data &&
-				(!options.method || noPayload[options.method.toUpperCase()])) {
+				(!options.method || requestHasNoBody[options.method.toUpperCase()])) {
 			prep.data = null; // we processed it as a query, no need to send it
 		}
 		return prep;
@@ -316,10 +339,10 @@
 		};
 	}
 
-	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach(function (verb) {
+	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'].forEach(function (verb) {
 		io[verb.toLowerCase()] = makeVerb(verb);
 	});
-	io.remove = io['delete']; // alias for simplicity
+	io.del = io.remove = io['delete']; // alias for simplicity
 
 
 	// export
@@ -340,6 +363,8 @@
 	io.processFailure = processFailure;
 	io.processData    = processData;
 	io.prepareRequest = prepareRequest;
+	io.dataProcessors = [];
+	io.mimeProcessors = [];
 
 	io.defaultTransport = io.xhrTransport = xhrTransport;
 	io.transports = {};

@@ -23,7 +23,7 @@
 		req.body = io.processData({setRequestHeader: function (key, value) {
 			headers.append(key, value);
 		}}, options, prep.data);
-		if (typeof Document !== 'undefined' && req.body instanceof Document) {
+		if (typeof Document !== 'undefined' && typeof XMLSerializer !== 'undefined' && req.body instanceof Document) {
 			if (!headers.has('Content-Type')) {
 				headers.append('Content-Type', 'application/xml');
 			}
