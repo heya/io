@@ -200,6 +200,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.1.6 &mdash; *Bugfix: `processFailure` could be skipped.*
 - 1.1.5 &mdash; *Bugfix: MIME processors. Thx Bryan Pease AKA @Akeron972!*
 - 1.1.4 &mdash; *Added custom data and MIME processors.*
 - 1.1.3 &mdash; *Formalized requests and responses with no bodies.*
