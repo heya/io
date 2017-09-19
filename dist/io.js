@@ -190,17 +190,21 @@
 			return xhr.response;
 		}
 		var contentType = xhr.getResponseHeader('Content-Type');
-		mimeLoop: for (var i = 0; i < io.mimeProcessors.length; i += 2) {
-			var mime = io.mimeProcessors[i], result;
-			switch (true) {
-				case mime instanceof RegExp && mime.test(contentType):
-				case typeof mime == 'function' && !!mime(contentType):
-				case typeof mime == 'string' && mime === contentType:
-					result = io.mimeProcessors[i + 1](xhr, contentType);
-					if (result !== undefined) {
-						return result;
-					}
-					break mimeLoop;
+		for (var i = 0; i < io.mimeProcessors.length; i += 2) {
+			var mime = io.mimeProcessors[i], flag;
+			if (typeof mime == 'string') {
+				flag = mime === contentType;
+			} else if (mime instanceof RegExp) {
+				flag = mime.test(contentType);
+			} else { // function
+				flag = mime(contentType);
+			}
+			if (flag) {
+				var result = io.mimeProcessors[i + 1](xhr, contentType);
+				if (result !== undefined) {
+					return result;
+				}
+				break;
 			}
 		}
 		if (xhr.responseXML) {
@@ -267,8 +271,8 @@
 		options = io.processOptions(options);
 
 		return io.request(options).
-			then(options.processSuccess || io.processSuccess,
-				options.processFailure || io.processFailure);
+			then(options.processSuccess || io.processSuccess).
+			catch(options.processFailure || io.processFailure);
 	}
 
 
