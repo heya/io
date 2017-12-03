@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Intelligent I/O for browsers.",
   "main": "main.js",
   "directories": {
@@ -26,14 +26,14 @@
   },
   "homepage": "https://github.com/heya/io#readme",
   "devDependencies": {
-    "body-parser": "^1.15.0",
-    "express": "^4.13.4",
-    "heya-async": "^1.0.0",
-    "heya-bundler": "^1.0.2",
-    "heya-globalize": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "heya-async": "^1.0.1",
+    "heya-bundler": "^1.0.7",
+    "heya-globalize": "^1.2.1",
     "heya-unit": "^0.3.0",
-    "phantomjs-prebuilt": "^2.1.7",
-    "request": "^2.71.0"
+    "phantomjs-prebuilt": "^2.1.16",
+    "request": "^2.83.0"
   },
   "browserGlobals": {
     "!root": "heya.io",
