@@ -55,7 +55,7 @@
 		return query.join('&');
 	}
 
-	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1},
+	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1, DELETE: 1},
 		responseHasNoBody = {HEAD: 1, OPTIONS: 1};
 
 	function buildUrl (options) {
