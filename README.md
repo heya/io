@@ -200,6 +200,7 @@ All documentation can be found in [project's wiki](https://github.com/heya/io/wi
 
 # Versions
 
+- 1.2.1 &mdash; *Added Ignore type for data processors, bugfixes.*
 - 1.2.0 &mdash; *Clarified DELETE, added more well-known types.*
 - 1.1.7 &mdash; *Refreshed dependencies.*
 - 1.1.6 &mdash; *Bugfix: `processFailure` could be skipped.*
