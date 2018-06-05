@@ -2,6 +2,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 	'use strict';
 
 	var isXml = /^application\/xml\b/,
+		isJson = /^application\/json\b/,
 		isOctetStream = /^application\/octet-stream\b/,
 		isMultiPart = /^multipart\/form-data\b/;
 
@@ -174,6 +175,28 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 			data[1] = 42;
 			io.post('http://localhost:3000/api', data).then(function (data) {
 				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_io_post_ignore (t) {
+			var x = t.startAsync();
+			io.post({
+				url: 'http://localhost:3000/api',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}, 'abc').then(function (data) {
+				eval(t.TEST('isJson.test(data.headers["content-type"])'));
+				eval(t.TEST('data.body === \'"abc"\''));
+				return io.post({
+					url: 'http://localhost:3000/api',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}, new (io.Ignore)('abc'));
+			}).then(function (data) {
+				eval(t.TEST('isJson.test(data.headers["content-type"])'));
+				eval(t.TEST('data.body === "abc"'));
 				x.done();
 			});
 		},

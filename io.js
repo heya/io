@@ -13,6 +13,8 @@
 	function BadStatus () { FailedIO.apply(this, arguments); }
 	BadStatus.prototype = Object.create(FailedIO.prototype);
 
+	function Ignore (data) { this.data = data; }
+
 	function FauxDeferred () {
 		var resolve, reject,
 			promise = new Promise(function executor (res, rej) {
@@ -144,7 +146,7 @@
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
 		if (!options.method || requestHasNoBody[options.method]) {
-			return null; // ignore payload for GET & HEAD
+			return null; // ignore payload for certain verbs
 		}
 		if (data && typeof data == 'object') {
 			for (var i = 0; i < io.dataProcessors.length; i += 2) {
@@ -154,6 +156,7 @@
 				}
 			}
 		}
+		if (data instanceof Ignore) return data.data;
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
 			switch (true) {
@@ -206,7 +209,7 @@
 			var mime = io.mimeProcessors[i], result;
 			switch (true) {
 				case mime instanceof RegExp && mime.test(contentType):
-				case typeof mime == 'function' && !!mime(contentType):
+				case typeof mime == 'function' && mime(contentType):
 				case typeof mime == 'string' && mime === contentType:
 					result = io.mimeProcessors[i + 1](xhr, contentType);
 					if (result !== undefined) {
@@ -364,6 +367,7 @@
 	io.TimedOut  = TimedOut;
 	io.BadStatus = BadStatus;
 	io.Deferred  = io.FauxDeferred = FauxDeferred;
+	io.Ignore    = Ignore;
 
 	io.prefix    = 'io-';
 	io.makeKey   = makeKey;

@@ -63,9 +63,9 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/fetch'], function (module,
 		},
 		function test_io_remove (t) {
 			var x = t.startAsync();
-			io.remove('http://localhost:3000/api', {a: 1}).then(function (data) {
+			io.remove('http://localhost:3000/api').then(function (data) {
 				eval(t.TEST('data.method === "DELETE"'));
-				eval(t.TEST('data.body === "{\\"a\\":1}"'));
+				eval(t.TEST('data.body === null'));
 				x.done();
 			});
 		},
