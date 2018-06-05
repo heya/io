@@ -157,11 +157,23 @@
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
 			switch (true) {
-				case typeof FormData != 'undefined' && data instanceof FormData:
 				case typeof Document != 'undefined' && data instanceof Document:
+				case typeof FormData != 'undefined' && data instanceof FormData:
 				case typeof Blob != 'undefined' && data instanceof Blob:
+				case typeof URLSearchParams != 'undefined' && data instanceof URLSearchParams:
+				case typeof ReadableStream != 'undefined' && data instanceof ReadableStream:
 					return data; // do not process well-known types
 				case typeof ArrayBuffer != 'undefined' && data instanceof ArrayBuffer:
+				case typeof Int8Array != 'undefined' && data instanceof Int8Array:
+				case typeof Int16Array != 'undefined' && data instanceof Int16Array:
+				case typeof Int32Array != 'undefined' && data instanceof Int32Array:
+				case typeof Uint8Array != 'undefined' && data instanceof Uint8Array:
+				case typeof Uint16Array != 'undefined' && data instanceof Uint16Array:
+				case typeof Uint32Array != 'undefined' && data instanceof Uint32Array:
+				case typeof Uint8ClampedArray != 'undefined' && data instanceof Uint8ClampedArray:
+				case typeof Float32Array != 'undefined' && data instanceof Float32Array:
+				case typeof Float64Array != 'undefined' && data instanceof Float64Array:
+				case typeof DataView != 'undefined' && data instanceof DataView:
 					!contentType && xhr.setRequestHeader('Content-Type', 'application/octet-stream');
 					return data;
 			}
