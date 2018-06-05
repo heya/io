@@ -60,9 +60,9 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 		},
 		function test_io_remove (t) {
 			var x = t.startAsync();
-			io.remove('http://localhost:3000/api', {a: 1}).then(function (data) {
+			io.remove('http://localhost:3000/api').then(function (data) {
 				eval(t.TEST('data.method === "DELETE"'));
-				eval(t.TEST('data.body === "{\\"a\\":1}"'));
+				eval(t.TEST('data.body === null'));
 				x.done();
 			});
 		},
@@ -141,14 +141,14 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 			});
 		},
 		function test_io_get_xml_as_array_buffer (t) {
-			if (typeof ArrayBuffer == 'undefined') return;
+			if (typeof ArrayBuffer == 'undefined' || typeof DataView == 'undefined') return;
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
 				responseType: 'arraybuffer'
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof ArrayBuffer'));
-				return io.post('http://localhost:3000/api', data);
+				return io.post('http://localhost:3000/api', new DataView(data));
 			}).then(function (data) {
 				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
 				x.done();
@@ -163,6 +163,17 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 			data.append('user', 'heh!');
 			io.post('http://localhost:3000/api', data).then(function (data) {
 				eval(t.TEST('isMultiPart.test(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_io_post_int8array (t) {
+			if (typeof Int8Array == 'undefined') return;
+			var x = t.startAsync();
+			var data = new Int8Array(8);
+			data[0] = 32;
+			data[1] = 42;
+			io.post('http://localhost:3000/api', data).then(function (data) {
+				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
