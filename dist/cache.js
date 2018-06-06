@@ -30,7 +30,7 @@
 		var xhr;
 		if (result instanceof XMLHttpRequest || result instanceof FauxXHR) {
 			xhr = result;
-		} else if (result instanceof io.Result) {
+		} else if (result && (result.xhr instanceof XMLHttpRequest || result.xhr instanceof FauxXHR)) {
 			xhr = result.xhr;
 		}
 		if (xhr) {

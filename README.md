@@ -5,9 +5,9 @@
 [![devDependencies][dev-deps-image]][dev-deps-url]
 [![NPM version][npm-image]][npm-url]
 
-A minimal, yet flexible I/O for browser with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
+A minimal, yet flexible I/O for browser and Node with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
 
-It can run on Node using a specialized transport: [heya-io-node](https://github.com/heya/io-node). This way it is possible to run `heya-io`-based unit tests, write an isomorphic JavaScript with I/O, to simplify I/O on Node, and to use enhanced features of `heya-io` in the server environment.
+It can run on Node using a specialized transport: [heya-io-node](https://github.com/heya/io-node). It greatly simplifies I/O on Node by leveraging enhanced features of `heya-io` in the server environment.
 
 Five services are included:
 
@@ -212,6 +212,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.2.4 &mdash; *Relaxed cache's detection of Result().*
 - 1.2.3 &mdash; *Regenerated dist.*
 - 1.2.2 &mdash; *Moved tests to Puppeteer, bugfixes, improved docs.*
 - 1.2.1 &mdash; *Added Ignore type for data processors, bugfixes.*
