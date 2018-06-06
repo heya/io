@@ -13,6 +13,8 @@
 	function BadStatus () { FailedIO.apply(this, arguments); }
 	BadStatus.prototype = Object.create(FailedIO.prototype);
 
+	function Ignore (data) { this.data = data; }
+
 	function FauxDeferred () {
 		var resolve, reject,
 			promise = new Promise(function executor (res, rej) {
@@ -55,7 +57,7 @@
 		return query.join('&');
 	}
 
-	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1},
+	var requestHasNoBody  = {GET: 1, HEAD: 1, OPTIONS: 1, DELETE: 1},
 		responseHasNoBody = {HEAD: 1, OPTIONS: 1};
 
 	function buildUrl (options) {
@@ -144,7 +146,7 @@
 			xhr.setRequestHeader('Accept', 'application/json');
 		}
 		if (!options.method || requestHasNoBody[options.method]) {
-			return null; // ignore payload for GET & HEAD
+			return null; // ignore payload for certain verbs
 		}
 		if (data && typeof data == 'object') {
 			for (var i = 0; i < io.dataProcessors.length; i += 2) {
@@ -154,14 +156,27 @@
 				}
 			}
 		}
+		if (data instanceof Ignore) return data.data;
 		var contentType = options.headers && options.headers['Content-Type'];
 		if (data) {
 			switch (true) {
-				case typeof FormData != 'undefined' && data instanceof FormData:
 				case typeof Document != 'undefined' && data instanceof Document:
+				case typeof FormData != 'undefined' && data instanceof FormData:
+				case typeof URLSearchParams != 'undefined' && data instanceof URLSearchParams:
 				case typeof Blob != 'undefined' && data instanceof Blob:
 					return data; // do not process well-known types
+				case typeof ReadableStream != 'undefined' && data instanceof ReadableStream:
 				case typeof ArrayBuffer != 'undefined' && data instanceof ArrayBuffer:
+				case typeof Int8Array != 'undefined' && data instanceof Int8Array:
+				case typeof Int16Array != 'undefined' && data instanceof Int16Array:
+				case typeof Int32Array != 'undefined' && data instanceof Int32Array:
+				case typeof Uint8Array != 'undefined' && data instanceof Uint8Array:
+				case typeof Uint16Array != 'undefined' && data instanceof Uint16Array:
+				case typeof Uint32Array != 'undefined' && data instanceof Uint32Array:
+				case typeof Uint8ClampedArray != 'undefined' && data instanceof Uint8ClampedArray:
+				case typeof Float32Array != 'undefined' && data instanceof Float32Array:
+				case typeof Float64Array != 'undefined' && data instanceof Float64Array:
+				case typeof DataView != 'undefined' && data instanceof DataView:
 					!contentType && xhr.setRequestHeader('Content-Type', 'application/octet-stream');
 					return data;
 			}
@@ -194,7 +209,7 @@
 			var mime = io.mimeProcessors[i], result;
 			switch (true) {
 				case mime instanceof RegExp && mime.test(contentType):
-				case typeof mime == 'function' && !!mime(contentType):
+				case typeof mime == 'function' && mime(contentType):
 				case typeof mime == 'string' && mime === contentType:
 					result = io.mimeProcessors[i + 1](xhr, contentType);
 					if (result !== undefined) {
@@ -352,6 +367,7 @@
 	io.TimedOut  = TimedOut;
 	io.BadStatus = BadStatus;
 	io.Deferred  = io.FauxDeferred = FauxDeferred;
+	io.Ignore    = Ignore;
 
 	io.prefix    = 'io-';
 	io.makeKey   = makeKey;
