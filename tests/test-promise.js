@@ -3,6 +3,11 @@ define(['module', 'heya-unit', 'heya-io/io'], function (module, unit, io) {
 
 	if (typeof Promise == 'undefined') return;
 
+	var isXml = /^application\/xml\b/,
+		isJson = /^application\/json\b/,
+		isOctetStream = /^application\/octet-stream\b/,
+		isMultiPart = /^multipart\/form-data\b/;
+
 	unit.add(module, [
 		function test_exist (t) {
 			eval(t.TEST('typeof io == "function"'));
@@ -93,6 +98,9 @@ define(['module', 'heya-unit', 'heya-io/io'], function (module, unit, io) {
 				eval(t.TEST('typeof data == "object"'));
 				eval(t.TEST('data.nodeName == "#document"'));
 				eval(t.TEST('data.nodeType == 9'));
+				return io.post('http://localhost:3000/api', data);
+			}).then(function (data) {
+				eval(t.TEST('isXml.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
@@ -126,17 +134,100 @@ define(['module', 'heya-unit', 'heya-io/io'], function (module, unit, io) {
 				responseType: 'blob'
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof Blob'));
+				return io.post('http://localhost:3000/api', data);
+			}).then(function (data) {
+				eval(t.TEST('isXml.test(data.headers["content-type"])'));
 				x.done();
 			});
 		},
 		function test_io_get_xml_as_array_buffer (t) {
-			if (typeof ArrayBuffer == 'undefined') return;
+			if (typeof ArrayBuffer == 'undefined' || typeof DataView == 'undefined') return;
 			var x = t.startAsync();
 			io.get({
 				url: 'http://localhost:3000/api',
 				responseType: 'arraybuffer'
 			}, {payloadType: 'xml'}).then(function (data) {
 				eval(t.TEST('data instanceof ArrayBuffer'));
+				return io.post('http://localhost:3000/api', new DataView(data));
+			}).then(function (data) {
+				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_io_post_formdata (t) {
+			if (typeof FormData == 'undefined') return;
+			var x = t.startAsync();
+			var div = document.createElement('div');
+			div.innerHTML = '<form><input type="hidden" name="a", value="1"></form>';
+			var data = new FormData(div.firstChild);
+			data.append('user', 'heh!');
+			io.post('http://localhost:3000/api', data).then(function (data) {
+				eval(t.TEST('isMultiPart.test(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_io_post_int8array (t) {
+			if (typeof Int8Array == 'undefined') return;
+			var x = t.startAsync();
+			var data = new Int8Array(8);
+			data[0] = 32;
+			data[1] = 42;
+			io.post('http://localhost:3000/api', data).then(function (data) {
+				eval(t.TEST('isOctetStream.test(data.headers["content-type"])'));
+				x.done();
+			});
+		},
+		function test_io_post_ignore (t) {
+			var x = t.startAsync();
+			io.post({
+				url: 'http://localhost:3000/api',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}, 'abc').then(function (data) {
+				eval(t.TEST('isJson.test(data.headers["content-type"])'));
+				eval(t.TEST('data.body === \'"abc"\''));
+				return io.post({
+					url: 'http://localhost:3000/api',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}, new io.Ignore('abc'));
+			}).then(function (data) {
+				eval(t.TEST('isJson.test(data.headers["content-type"])'));
+				eval(t.TEST('data.body === "abc"'));
+				x.done();
+			});
+		},
+		function test_io_custom_mime_processor (t) {
+		    var x = t.startAsync();
+		    var restoreOriginal = io.mimeProcessors;
+		    io.mimeProcessors = [];
+			io.mimeProcessors.push(function(contentType){
+				return contentType === 'text/plain; charset=utf-8';
+			});
+			io.mimeProcessors.push(function(xhr, contentType){
+				eval(t.TEST('contentType === "text/plain; charset=utf-8"'));
+				eval(t.TEST('xhr.responseText == "Hello, world!"'));
+				return 'Custom Parser Result';
+			});
+			io.get('http://localhost:3000/api', {payloadType: 'txt'}).then(function (data) {
+				eval(t.TEST('typeof data == "string"'));
+				eval(t.TEST('data === "Custom Parser Result"'));
+				io.mimeProcessors = restoreOriginal;
+				x.done();
+			});
+		},
+		function test_io_get_as_xhr (t) {
+			var x = t.startAsync();
+			io.get({
+				url: 'http://localhost:3000/api',
+				returnXHR: true
+			}).then(function (xhr) {
+				var data = io.getData(xhr), headers = io.getHeaders(xhr);
+				eval(t.TEST('xhr.status == 200'));
+				eval(t.TEST('typeof data == "object"'));
+				eval(t.TEST('isJson.test(headers["content-type"])'));
 				x.done();
 			});
 		}

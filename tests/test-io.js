@@ -219,6 +219,19 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				x.done();
 			});
 		},
+		function test_io_get_as_xhr (t) {
+			var x = t.startAsync();
+			io.get({
+				url: 'http://localhost:3000/api',
+				returnXHR: true
+			}).then(function (xhr) {
+				var data = io.getData(xhr), headers = io.getHeaders(xhr);
+				eval(t.TEST('xhr.status == 200'));
+				eval(t.TEST('typeof data == "object"'));
+				eval(t.TEST('isJson.test(headers["content-type"])'));
+				x.done();
+			});
+		},
 		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 		}
