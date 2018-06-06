@@ -212,6 +212,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.2.2 &mdash; *Moved tests to Puppeteer, bugfixes, improved docs.*
 - 1.2.1 &mdash; *Added Ignore type for data processors, bugfixes.*
 - 1.2.0 &mdash; *Clarified DELETE, added more well-known types.*
 - 1.1.7 &mdash; *Refreshed dependencies.*
