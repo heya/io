@@ -162,10 +162,10 @@
 			switch (true) {
 				case typeof Document != 'undefined' && data instanceof Document:
 				case typeof FormData != 'undefined' && data instanceof FormData:
-				case typeof Blob != 'undefined' && data instanceof Blob:
 				case typeof URLSearchParams != 'undefined' && data instanceof URLSearchParams:
-				case typeof ReadableStream != 'undefined' && data instanceof ReadableStream:
 					return data; // do not process well-known types
+				case typeof Blob != 'undefined' && data instanceof Blob:
+				case typeof ReadableStream != 'undefined' && data instanceof ReadableStream:
 				case typeof ArrayBuffer != 'undefined' && data instanceof ArrayBuffer:
 				case typeof Int8Array != 'undefined' && data instanceof Int8Array:
 				case typeof Int16Array != 'undefined' && data instanceof Int16Array:
