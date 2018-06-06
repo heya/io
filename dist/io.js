@@ -5,7 +5,10 @@
 	// the I/O powerhouse
 
 	function Result (xhr, options, event) { this.xhr = xhr; this.options = options; this.event = event; }
-	Result.prototype = {getData: function () { return getData(this.xhr); }};
+	Result.prototype = {
+		getData: function () { return io.getData(this.xhr); },
+		getHeaders: function () { return io.getHeaders(this.xhr); }
+	};
 	function FailedIO () { Result.apply(this, arguments); }
 	FailedIO.prototype = Object.create(Result.prototype);
 	function TimedOut () { FailedIO.apply(this, arguments); }
@@ -197,6 +200,7 @@
 	}
 
 	function getData (xhr) {
+		if (!xhr) return; // return undefined
 		if (xhr.status === 204) {
 			// no body was sent
 			return; // return undefined
@@ -232,7 +236,7 @@
 			return result;
 		}
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
-			return io.Deferred.reject(new BadStatus(result.xhr, result.options, result.event));
+			return io.Deferred.reject(new io.BadStatus(result.xhr, result.options, result.event));
 		}
 		if (result.options.returnXHR) {
 			return result.xhr;
@@ -241,7 +245,7 @@
 			// no body was sent
 			return; // return undefined
 		}
-		return getData(result.xhr);
+		return io.getData(result.xhr);
 	}
 
 	function processFailure (failure) {
@@ -354,6 +358,28 @@
 		};
 	}
 
+	function getHeaders (xhr) {
+		var headers = {};
+		if (!xhr || typeof xhr.getAllResponseHeaders != 'function') return headers;
+		var rawHeaders = xhr.getAllResponseHeaders();
+		if (!rawHeaders) return headers;
+		rawHeaders.split('\r\n').forEach(function (line) {
+			var header = /^\s*([\w\-]+)\s*:\s*(.*)$/.exec(line);
+			if (!header) return;
+			var key = header[1].toLowerCase(), value = headers[key];
+			if (typeof value == 'string') {
+				headers[key] = [value, header[2]];
+			} else if (value instanceof Array) {
+				value.push(header[2]);
+			} else {
+				headers[key] = header[2];
+			}
+		});
+		return headers;
+	}
+
+
+
 	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'].forEach(function (verb) {
 		io[verb.toLowerCase()] = makeVerb(verb);
 	});
@@ -369,10 +395,13 @@
 	io.Deferred  = io.FauxDeferred = FauxDeferred;
 	io.Ignore    = Ignore;
 
-	io.prefix    = 'io-';
-	io.makeKey   = makeKey;
-	io.makeQuery = makeQuery;
-	io.buildUrl  = buildUrl;
+	io.prefix     = 'io-';
+	io.makeKey    = makeKey;
+	io.makeQuery  = makeQuery;
+	io.buildUrl   = buildUrl;
+	io.getHeaders = getHeaders;
+	io.getData    = getData;
+	io.makeVerb   = makeVerb;
 
 	io.processOptions = processOptions;
 	io.processSuccess = processSuccess;
@@ -384,7 +413,6 @@
 
 	io.defaultTransport = io.xhrTransport = xhrTransport;
 	io.transports = {};
-	io.makeVerb   = makeVerb;
 
 	io.request = request;
 

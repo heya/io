@@ -221,6 +221,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.2.5 &mdash; *Exposed `io.getData(xhr)` and `io.getHeaders(xhr)`.*
 - 1.2.4 &mdash; *Relaxed cache's detection of Result().*
 - 1.2.3 &mdash; *Regenerated dist.*
 - 1.2.2 &mdash; *Moved tests to Puppeteer, bugfixes, improved docs.*
