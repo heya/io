@@ -232,7 +232,7 @@
 			return result;
 		}
 		if (result.xhr.status < 200 || result.xhr.status >= 300) {
-			return io.Deferred.reject(new BadStatus(result.xhr, result.options, result.event));
+			return io.Deferred.reject(new io.BadStatus(result.xhr, result.options, result.event));
 		}
 		if (result.options.returnXHR) {
 			return result.xhr;
