@@ -198,6 +198,18 @@ See [How to include](https://github.com/heya/io/wiki/How-to-include) for more de
 
 All documentation can be found in [project's wiki](https://github.com/heya/io/wiki).
 
+# Working on this project
+
+In order to run tests in a browser of your choice, so you can debug interactively, start the test server:
+
+```bash
+npm start
+```
+
+Then open this URL in a browser: http://localhost:3000/tests/tests.html It will show a blank screen, but the output will appear in the console of your developer tools.
+
+The server runs indefinitely, and can be stopped by Ctrl+C.
+
 # Versions
 
 - 1.2.1 &mdash; *Added Ignore type for data processors, bugfixes.*
