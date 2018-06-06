@@ -62,6 +62,15 @@ heya.io.patch('/things/7', {age: 14}).then(done);
 heya.io.remove('/things/3').then(done);
 ```
 
+**Modern browsers:**
+
+```js
+const doIO = async query => {
+  const result = await heya.io.get('/hello', {q: query});
+  await heya.io.post('/things', {name: 'Bob', age: 42, friendly: result});
+}
+```
+
 Other transports:
 
 ```js
