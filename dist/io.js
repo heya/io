@@ -66,7 +66,7 @@
 	function buildUrl (options) {
 		var url = options.url, query = options.query, data = options.data;
 		if (query) {
-			query = io.makeQuery(query) || query;
+			query = typeof query == 'string' ? query : io.makeQuery(query);
 		} else {
 			if((!options.method || requestHasNoBody[options.method.toUpperCase()]) && data) {
 				query = io.makeQuery(data);
@@ -358,6 +358,8 @@
 		};
 	}
 
+	var noDups = {age: 1, authorization: 1, 'content-length': 1, 'content-type': 1, etag: 1, expires: 1, from: 1, host: 1, 'if-modified-since': 1,
+		'if-unmodified-since': 1, 'last-modified': 1, location: 1, 'max-forwards': 1, 'proxy-authorization': 1, referer: 1, 'retry-after': 1, 'user-agent': 1};
 	function getHeaders (xhr) {
 		var headers = {};
 		if (!xhr || typeof xhr.getAllResponseHeaders != 'function') return headers;
@@ -367,10 +369,11 @@
 			var header = /^\s*([\w\-]+)\s*:\s*(.*)$/.exec(line);
 			if (!header) return;
 			var key = header[1].toLowerCase(), value = headers[key];
-			if (typeof value == 'string') {
-				headers[key] = [value, header[2]];
-			} else if (value instanceof Array) {
-				value.push(header[2]);
+			if (key === 'set-cookie') {
+				if (!(value instanceof Array)) headers[key] = [];
+				headers[key].push(header[2]);
+			} else if (typeof value == 'string') {
+				headers[key] = noDups[key] ? header[2] : (value + ', ' + header[2]);
 			} else {
 				headers[key] = header[2];
 			}
