@@ -16,7 +16,7 @@ app.use(bodyParser.raw({type: '*/*'}));
 
 var counter = 0;
 
-app.all('/api', function (req, res) {
+app.all('/api*', function (req, res) {
 	if (req.query.status) {
 		var status = parseInt(req.query.status, 10);
 		if (isNaN(status) || status < 100 || status >= 600) {
