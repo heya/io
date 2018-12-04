@@ -11,7 +11,7 @@ define(['module', 'heya-unit', 'heya-io/cache', 'heya-async/Deferred-ext'], func
 		},
 		function test_cache (t) {
 			var x = t.startAsync(), counter;
-			io.cache.storage.clear();
+			io.cache.clear();
 			// the next one should be from a server
 			io.get('http://localhost:3000/api').then(function (value) {
 				counter = value.counter;
@@ -19,7 +19,7 @@ define(['module', 'heya-unit', 'heya-io/cache', 'heya-async/Deferred-ext'], func
 				return io.get('http://localhost:3000/api');
 			}).then(function (value) {
 				eval(t.TEST('counter === value.counter'));
-				io.cache.storage.clear();
+				io.cache.clear();
 				// the next one should be from a server
 				return io.get('http://localhost:3000/api');
 			}).then(function (value) {
@@ -27,10 +27,76 @@ define(['module', 'heya-unit', 'heya-io/cache', 'heya-async/Deferred-ext'], func
 				x.done();
 			});
 		},
+		function test_cache_remove_item (t) {
+			var x = t.startAsync(), counter;
+			io.cache.clear();
+			// the next one should be from a server
+			io.get('http://localhost:3000/api').then(function (value) {
+				counter = value.counter;
+				// the next one should be from cache
+				return io.get('http://localhost:3000/api');
+			}).then(function (value) {
+				eval(t.TEST('counter === value.counter'));
+				io.cache.remove('http://localhost:3000/api');
+				// the next one should be from a server
+				return io.get('http://localhost:3000/api');
+			}).then(function (value) {
+				eval(t.TEST('counter !== value.counter'));
+				x.done();
+			});
+		},
+		function test_cache_remove_wildcard (t) {
+			var x = t.startAsync(), counter;
+			io.cache.clear();
+			// the next one should be from a server
+			io.get('http://localhost:3000/api/xxx').then(function (value) {
+				counter = value.counter;
+				// the next one should be from cache
+				return io.get('http://localhost:3000/api/xxx');
+			}).then(function (value) {
+				eval(t.TEST('counter === value.counter'));
+				io.cache.remove('http://localhost:3000/api*');
+				// the next one should be from a server
+				return io.get('http://localhost:3000/api/xxx');
+			}).then(function (value) {
+				eval(t.TEST('counter !== value.counter'));
+				x.done();
+			});
+		},
+		function test_cache_remove_regexp (t) {
+			var x = t.startAsync(), counter1, counter2;
+			io.cache.clear();
+			// the next one should be from a server
+			io.get('http://localhost:3000/api/xxx').then(function (value) {
+				counter1 = value.counter;
+				// the next one should be from cache
+				return io.get('http://localhost:3000/api/xxx');
+			}).then(function (value) {
+				eval(t.TEST('counter1 === value.counter'));
+				// the next one should be from a server
+				return io.get('http://localhost:3000/api/yyy');
+			}).then(function (value) {
+				counter2 = value.counter;
+				// the next one should be from cache
+				return io.get('http://localhost:3000/api/yyy');
+			}).then(function (value) {
+				eval(t.TEST('counter2 === value.counter'));
+				io.cache.remove(/\bxxx\b/);
+				// the next one should be from a server
+				return io.get('http://localhost:3000/api/xxx');
+			}).then(function (value) {
+				eval(t.TEST('counter1 !== value.counter'));
+				// the next one should be from cache
+				return io.get('http://localhost:3000/api/yyy');
+			}).then(function (value) {
+				eval(t.TEST('counter2 === value.counter'));
+				x.done();
+			});
+		},
 		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 			io.cache.detach();
-			io.cache.storage.clear();
+			io.cache.clear();
 		}
 	]);
 

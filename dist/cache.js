@@ -60,11 +60,37 @@
 		io.cache.saveByKey(io.makeKey(options), result);
 	}
 
-	function remove (options) {
-		options = io.processOptions(typeof options == 'string' ?
-			{url: options, method: 'GET'} : options);
+	function remove(options) {
+		if (typeof options == "string") {
+			if (options && options.charAt(options.length - 1) == "*") {
+				var prefix = options.slice(0, options.length - 1), pl = prefix.length,
+					keys = io.cache.storage.getKeys(),
+					regexp = new RegExp('^.{' + (io.prefix.length + 1) + '}\\w+\\-(.*)$');
+				for (var i = 0; i < keys.length; ++i) {
+					var key = keys[i], m = regexp.exec(key);
+					if (m && m[1].slice(0, pl) == prefix) {
+						io.cache.storage.remove(key);
+					}
+				}
+				return;
+			}
+			options = {url: options, method: "GET"};
+		} else if (options instanceof RegExp) {
+			var keys = io.cache.storage.getKeys(),
+				regexp = new RegExp('^.{' + io.prefix.length + '}\\w+\\-(.*)$');
+			for (var i = 0; i < keys.length; ++i) {
+				var key = keys[i], m = regexp.exec(key);
+				if (m && options.test(m[1])) {
+					io.cache.storage.remove(key);
+				}
+			}
+			return;
+		}
+		// the default
 		io.cache.storage.remove(io.makeKey(options));
 	}
+
+	function clear() { io.cache.storage.clear(); }
 
 	function makeStorage (type) {
 		return {
@@ -80,6 +106,16 @@
 			},
 			clear: function () {
 				window[type].clear();
+			},
+			getKeys: function() {
+				var storage = window[type], keys = [], prefix = io.prefix, pl = prefix.length;
+				for (var i = 0, n = storage.length; i < n; ++i) {
+					var key = storage.key(i);
+					if (prefix == key.slice(0, pl)) {
+						keys.push(key);
+					}
+				}
+				return keys;
 			}
 		};
 	}
@@ -91,6 +127,7 @@
 		saveByKey:   saveByKey,
 		save:        save,
 		remove:      remove,
+		clear:       clear,
 		makeStorage: makeStorage,
 		storage:     makeStorage('sessionStorage')
 	};
