@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "node tests/server.js",
-    "test": "node tests/puppeteer.js",
+    "test-chrome": "node tests/puppeteer-chrome.js",
+    "test-firefox": "node tests/puppeteer-firefox.js",
+    "test": "npm run test-chrome && npm run test-firefox",
     "dist": "node node_modules/heya-globalize/index.js",
     "prepublishOnly": "npm run dist"
   },
@@ -34,7 +36,8 @@
     "heya-bundler": "^1.0.7",
     "heya-globalize": "^1.2.1",
     "heya-unit": "^0.3.0",
-    "puppeteer": "^1.11.0"
+    "puppeteer": "^1.11.0",
+    "puppeteer-firefox": "^0.4.2"
   },
   "browserGlobals": {
     "!root": "heya.io",
