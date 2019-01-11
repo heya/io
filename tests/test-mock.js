@@ -22,7 +22,7 @@ define(['module', 'heya-unit', 'heya-io/mock', 'heya-async/Deferred', 'heya-asyn
 					return io.patch('http://localhost:3000/a', null);
 				}).then(function (value) {
 					t.info('got ' + value);
-					io.mock('http://localhost:3000/a', null);
+					io.mock('http://localhost:3000/a');
 					return io.get('http://localhost:3000/a');
 				}).then(function () {
 					t.info('shouldn\'t be here!');
@@ -69,9 +69,98 @@ define(['module', 'heya-unit', 'heya-io/mock', 'heya-async/Deferred', 'heya-asyn
 					return io.post('http://localhost:3000/aaa', {z: 1});
 				}).then(function (value) {
 					t.info('got ' + value);
-					io.mock('http://localhost:3000/a*', null);
-					io.mock('http://localhost:3000/aa*', null);
-					io.mock('http://localhost:3000/aaa*', null);
+					io.mock('http://localhost:3000/a*');
+					io.mock('http://localhost:3000/aa*');
+					io.mock('http://localhost:3000/aaa*');
+					return io.get('http://localhost:3000/aa');
+				}).then(function () {
+					t.info('shouldn\'t be here!');
+					x.done();
+				}, function () {
+					t.info('error');
+					x.done();
+				});
+			},
+			logs: [
+				'mock callback: aGET',
+				'got aGET',
+				'mock callback: aaPATCH',
+				'got aaPATCH',
+				'mock callback: aPUT',
+				'got aPUT',
+				'mock callback: aaaPOST',
+				'got aaaPOST',
+				'error'
+			]
+		},
+		{
+			test: function test_regexp (t) {
+				var x = t.startAsync();
+				io.mock(/^https?:\/\/localhost:3000\/a/, function (options) {
+					const m = /^https?:\/\/[^\/]+\/(a+)/.exec(options.url);
+					var value = m[1] + (options.method || 'GET');
+					t.info('mock callback: ' + value);
+					return value;
+				});
+				io.get('http://localhost:3000/a/x').then(function (value) {
+					t.info('got ' + value);
+					return io.patch('http://localhost:3000/aa', null);
+				}).then(function (value) {
+					t.info('got ' + value);
+					return io.put('http://localhost:3000/ab');
+				}).then(function (value) {
+					t.info('got ' + value);
+					return io.post('http://localhost:3000/aaa', {z: 1});
+				}).then(function (value) {
+					t.info('got ' + value);
+					io.mock(/^https?:\/\/localhost:3000\/a/);
+					return io.get('http://localhost:3000/aa');
+				}).then(function () {
+					t.info('shouldn\'t be here!');
+					x.done();
+				}, function () {
+					t.info('error');
+					x.done();
+				});
+			},
+			logs: [
+				'mock callback: aGET',
+				'got aGET',
+				'mock callback: aaPATCH',
+				'got aaPATCH',
+				'mock callback: aPUT',
+				'got aPUT',
+				'mock callback: aaaPOST',
+				'got aaaPOST',
+				'error'
+			]
+		},
+		{
+			test: function test_match (t) {
+				var x = t.startAsync();
+
+				function matcher (options) {
+					return /^https?:\/\/localhost:3000\/a/.test(options.url);
+				}
+
+				io.mock(matcher, function (options) {
+					const m = /^https?:\/\/[^\/]+\/(a+)/.exec(options.url);
+					var value = m[1] + (options.method || 'GET');
+					t.info('mock callback: ' + value);
+					return value;
+				});
+				io.get('http://localhost:3000/a/x').then(function (value) {
+					t.info('got ' + value);
+					return io.patch('http://localhost:3000/aa', null);
+				}).then(function (value) {
+					t.info('got ' + value);
+					return io.put('http://localhost:3000/ab');
+				}).then(function (value) {
+					t.info('got ' + value);
+					return io.post('http://localhost:3000/aaa', {z: 1});
+				}).then(function (value) {
+					t.info('got ' + value);
+					io.mock(matcher);
 					return io.get('http://localhost:3000/aa');
 				}).then(function () {
 					t.info('shouldn\'t be here!');
