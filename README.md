@@ -221,6 +221,8 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.4.1 &mdash; *Technical release. No changes.*
+- 1.4.0 &mdash; *Added mocks by regular expressions and matcher functions.*
 - 1.3.0 &mdash; *Added cache removal by regular expressions and wildcards.*
 - 1.2.6 &mdash; *Bugfixes: `getHeaders()` behaves like on Node, empty object queries are supported.*
 - 1.2.5 &mdash; *Exposed `io.getData(xhr)` and `io.getHeaders(xhr)`.*
