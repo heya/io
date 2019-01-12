@@ -221,6 +221,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.4.2 &mdash; *Added `ignoreBadStatus` flag when `returnXHR`.*
 - 1.4.1 &mdash; *Technical release. No changes.*
 - 1.4.0 &mdash; *Added mocks by regular expressions and matcher functions.*
 - 1.3.0 &mdash; *Added cache removal by regular expressions and wildcards.*

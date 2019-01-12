@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Intelligent I/O for browsers and Node.",
   "main": "main.js",
   "directories": {
@@ -10,6 +10,7 @@
     "start": "node tests/server.js",
     "test": "node tests/puppeteer.js",
     "dist": "node node_modules/heya-globalize/index.js",
+    "build": "npm run dist",
     "prepublishOnly": "npm run dist"
   },
   "repository": {

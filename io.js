@@ -235,7 +235,7 @@
 		if (!(result instanceof io.Result)) {
 			return result;
 		}
-		if (result.xhr.status < 200 || result.xhr.status >= 300) {
+		if ((!result.options.returnXHR || !result.options.ignoreBadStatus) && (result.xhr.status < 200 || result.xhr.status >= 300)) {
 			return io.Deferred.reject(new io.BadStatus(result.xhr, result.options, result.event));
 		}
 		if (result.options.returnXHR) {
