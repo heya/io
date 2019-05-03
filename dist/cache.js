@@ -55,29 +55,25 @@
 	}
 
 	function save (options, result) {
-		options = io.processOptions(typeof options == 'string' ?
-			{url: options, method: 'GET'} : options);
+		options = io.processOptions(typeof options == 'string' ? {url: options, method: 'GET'} : options);
 		io.cache.saveByKey(io.makeKey(options), result);
 	}
 
 	function remove(options) {
-		if (typeof options == "string") {
-			if (options && options.charAt(options.length - 1) == "*") {
-				var prefix = options.slice(0, options.length - 1), pl = prefix.length,
-					keys = io.cache.storage.getKeys(),
-					regexp = new RegExp('^.{' + (io.prefix.length + 1) + '}\\w+\\-(.*)$');
-				for (var i = 0; i < keys.length; ++i) {
-					var key = keys[i], m = regexp.exec(key);
-					if (m && m[1].slice(0, pl) == prefix) {
-						io.cache.storage.remove(key);
-					}
-				}
-				return;
-			}
-			options = {url: options, method: "GET"};
-		} else if (options instanceof RegExp) {
+		if (typeof options == 'function') {
 			var keys = io.cache.storage.getKeys(),
-				regexp = new RegExp('^.{' + io.prefix.length + '}\\w+\\-(.*)$');
+				regexp = new RegExp('^.{' + io.prefix.length + '}(.*)$');
+			for (var i = 0; i < keys.length; ++i) {
+				var key = keys[i], m = regexp.exec(key);
+				if (m && options(m[1])) {
+					io.cache.storage.remove(key);
+				}
+			}
+			return;
+		}
+		if (options instanceof RegExp) {
+			var keys = io.cache.storage.getKeys(),
+				regexp = new RegExp('^.{' + io.prefix.length + '}(.*)$');
 			for (var i = 0; i < keys.length; ++i) {
 				var key = keys[i], m = regexp.exec(key);
 				if (m && options.test(m[1])) {
@@ -86,7 +82,20 @@
 			}
 			return;
 		}
-		// the default
+		options = io.processOptions(typeof options == "string" ? {url: options, method: "GET"} : options);
+		var url = options.url;
+		if (url && url.charAt(url.length - 1) == "*") {
+			var prefix = url.slice(0, url.length - 1), pl = prefix.length,
+				keys = io.cache.storage.getKeys(),
+				regexp = new RegExp('^.{' + (io.prefix.length + 1) + '}\\w+\\-(.*)$');
+			for (var i = 0; i < keys.length; ++i) {
+				var key = keys[i], m = regexp.exec(key);
+				if (m && m[1].slice(0, pl) == prefix) {
+					io.cache.storage.remove(key);
+				}
+			}
+			return;
+		}
 		io.cache.storage.remove(io.makeKey(options));
 	}
 
