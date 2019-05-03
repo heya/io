@@ -6,7 +6,7 @@ addon:
 language: node_js
 
 node_js:
-  - "10"
+  - "11"
 
 before_script:
   - node tests/server.js &

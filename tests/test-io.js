@@ -232,6 +232,43 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-async/Deferred'], function (m
 				x.done();
 			});
 		},
+		function test_io_get_as_xhr_ignore_errors (t) {
+			var x = t.startAsync();
+			io.get({
+				url: 'http://localhost:3000/api',
+				query: {status: 500},
+				returnXHR: false,
+				ignoreBadStatus: true
+			}).then(function (data) {
+				t.test(false); // we should not be here
+				x.done();
+			}).catch(function (data) {
+				eval(t.TEST('data.xhr.status === 500'));
+				return io.get({
+					url: 'http://localhost:3000/api',
+					query: {status: 500},
+					returnXHR: true,
+					ignoreBadStatus: false
+				});
+			}).then(function (xhr) {
+				t.test(false); // we should not be here
+				x.done();
+			}).catch(function (data) {
+				eval(t.TEST('data.xhr.status === 500'));
+				return io.get({
+					url: 'http://localhost:3000/api',
+					query: {status: 500},
+					returnXHR: true,
+					ignoreBadStatus: true
+				});
+			}).then(function (xhr) {
+				var data = io.getData(xhr), headers = io.getHeaders(xhr);
+				eval(t.TEST('xhr.status == 500'));
+				eval(t.TEST('typeof data == "object"'));
+				eval(t.TEST('isJson.test(headers["content-type"])'));
+				x.done();
+			});
+		},
 		function test_teardown () {
 			io.Deferred = io.FauxDeferred;
 		}

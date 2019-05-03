@@ -1,9 +1,13 @@
 # `io`
 
+
 [![Build status][travis-image]][travis-url]
 [![Dependencies][deps-image]][deps-url]
 [![devDependencies][dev-deps-image]][dev-deps-url]
 [![NPM version][npm-image]][npm-url]
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/heya/io.svg)](https://greenkeeper.io/)
+
 
 A minimal, yet flexible I/O for browser and Node with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
 
@@ -221,6 +225,9 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.4.2 &mdash; *Added `ignoreBadStatus` flag when `returnXHR`.*
+- 1.4.1 &mdash; *Technical release. No changes.*
+- 1.4.0 &mdash; *Added mocks by regular expressions and matcher functions.*
 - 1.3.0 &mdash; *Added cache removal by regular expressions and wildcards.*
 - 1.2.6 &mdash; *Bugfixes: `getHeaders()` behaves like on Node, empty object queries are supported.*
 - 1.2.5 &mdash; *Exposed `io.getData(xhr)` and `io.getHeaders(xhr)`.*

@@ -24,6 +24,26 @@
 				}
 			}
 		}
+		if (!callback) {
+			const regexps = io.mock.regexp;
+			for (let i = 0; i < regexps.length; ++i) {
+				const value = regexps[i];
+				if (value.url.test(url)) {
+					callback = value.callback;
+					break;
+				}
+			}
+		}
+		if (!callback) {
+			const match = io.mock.match;
+			for (let i = 0; i < match.length; ++i) {
+				const value = match[i];
+				if (value.url(options, prep, level)) {
+					callback = value.callback;
+					break;
+				}
+			}
+		}
 
 		return callback ? wrap(options, callback(options, prep, level)) : null;
 	}
@@ -85,6 +105,34 @@
 					delete io.mock.exact[url];
 				}
 			}
+		} else if (url instanceof RegExp) {
+			const regexps = io.mock.regexp;
+			for (let i = 0; i < regexps.length; ++i) {
+				const value = regexps[i];
+				if (value.url.source == url.source && value.url.flags == url.flags) {
+					if (callback) {
+						value.callback = callback;
+					} else {
+						regexps.splice(i, 1);
+					}
+					return;
+				}
+			}
+			regexps.splice(regexps.length, 0, {url: url, callback: callback});
+		} else if (typeof url == 'function') {
+			const match = io.mock.match;
+			for (let i = 0; i < match.length; ++i) {
+				const value = match[i];
+				if (value.url === url) {
+					if (callback) {
+						value.callback = callback;
+					} else {
+						match.splice(i, 1);
+					}
+					return;
+				}
+			}
+			match.splice(match.length, 0, {url: url, callback: callback});
 		}
 	};
 
@@ -92,6 +140,8 @@
 
 	io.mock.exact  = {};
 	io.mock.prefix = [];
+	io.mock.regexp = [];
+	io.mock.match  = [];
 
 	io.mock.makeXHR = makeXHR;
 
