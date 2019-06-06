@@ -113,13 +113,18 @@
 		xhr.ontimeout = function (event) {
 			d.reject(new io.TimedOut(xhr, options, event), true);
 		};
-		if (typeof d.progress == 'function') {
+		var dFlag = typeof d.progress == 'function', oFlag = typeof options.onProgress == 'function';
+		if (oFlag || dFlag) {
 			xhr.onprogress = function (event) {
-				d.progress({xhr: xhr, options: options, event: event, upload: false});
+				var p = {xhr: xhr, options: options, event: event, upload: false};
+				oFlag && options.onProgress(p);
+				dFlag && d.progress(p);
 			};
 			if (xhr.upload) {
 				xhr.upload.onprogress = function (event) {
-					d.progress({xhr: xhr, options: options, event: event, upload: true});
+					var p = {xhr: xhr, options: options, event: event, upload: true};
+					oFlag && options.onProgress(p);
+					dFlag && d.progress(p);
 				};
 			}
 		}
