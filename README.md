@@ -225,36 +225,37 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
-- 1.5.0 &mdash; *Added cache removal by a function.*
-- 1.4.2 &mdash; *Added `ignoreBadStatus` flag when `returnXHR`.*
-- 1.4.1 &mdash; *Technical release. No changes.*
-- 1.4.0 &mdash; *Added mocks by regular expressions and matcher functions.*
-- 1.3.0 &mdash; *Added cache removal by regular expressions and wildcards.*
-- 1.2.6 &mdash; *Bugfixes: `getHeaders()` behaves like on Node, empty object queries are supported.*
-- 1.2.5 &mdash; *Exposed `io.getData(xhr)` and `io.getHeaders(xhr)`.*
-- 1.2.4 &mdash; *Relaxed cache's detection of Result().*
-- 1.2.3 &mdash; *Regenerated dist.*
-- 1.2.2 &mdash; *Moved tests to Puppeteer, bugfixes, improved docs.*
-- 1.2.1 &mdash; *Added Ignore type for data processors, bugfixes.*
-- 1.2.0 &mdash; *Clarified DELETE, added more well-known types.*
-- 1.1.7 &mdash; *Refreshed dependencies.*
-- 1.1.6 &mdash; *Bugfix: `processFailure` could be skipped.*
-- 1.1.5 &mdash; *Bugfix: MIME processors. Thx [Bryan Pease](https://github.com/Akeron972)!*
-- 1.1.4 &mdash; *Added custom data and MIME processors.*
-- 1.1.3 &mdash; *Formalized requests and responses with no bodies.*
-- 1.1.2 &mdash; *Minor fixes for non-browser environments. New alias and verb.*
-- 1.1.1 &mdash; *Added `url` tagged literals (an ES6 feature).*
-- 1.1.0 &mdash; *Added fetch() as an alternative default transport.*
-- 1.0.9 &mdash; *Correcting typos in README. New version of a test server.*
-- 1.0.8 &mdash; *Add a helper for busting browser cache.*
-- 1.0.7 &mdash; *Regenerated dist.*
-- 1.0.6 &mdash; *Added a helper to extract data from XHR in case of errors.*
-- 1.0.5 &mdash; *XHR can be reinstated from a JSON object, not just a string.*
-- 1.0.4 &mdash; *Regenerated dist.*
-- 1.0.3 &mdash; *Bugfix: cache XHR object directly.*
-- 1.0.2 &mdash; *Fixed formatting errors in README.*
-- 1.0.1 &mdash; *Improved documentation.*
-- 1.0.0 &mdash; *The initial public release as heya-io. Sunset of heya-request. Move from bitbucket.*
+- 1.6.0 *Added `options.onProgress()` and tests on Firefox Puppeteer.*
+- 1.5.0 *Added cache removal by a function.*
+- 1.4.2 *Added `ignoreBadStatus` flag when `returnXHR`.*
+- 1.4.1 *Technical release. No changes.*
+- 1.4.0 *Added mocks by regular expressions and matcher functions.*
+- 1.3.0 *Added cache removal by regular expressions and wildcards.*
+- 1.2.6 *Bugfixes: `getHeaders()` behaves like on Node, empty object queries are supported.*
+- 1.2.5 *Exposed `io.getData(xhr)` and `io.getHeaders(xhr)`.*
+- 1.2.4 *Relaxed cache's detection of Result().*
+- 1.2.3 *Regenerated dist.*
+- 1.2.2 *Moved tests to Puppeteer, bugfixes, improved docs.*
+- 1.2.1 *Added Ignore type for data processors, bugfixes.*
+- 1.2.0 *Clarified DELETE, added more well-known types.*
+- 1.1.7 *Refreshed dependencies.*
+- 1.1.6 *Bugfix: `processFailure` could be skipped.*
+- 1.1.5 *Bugfix: MIME processors. Thx [Bryan Pease](https://github.com/Akeron972)!*
+- 1.1.4 *Added custom data and MIME processors.*
+- 1.1.3 *Formalized requests and responses with no bodies.*
+- 1.1.2 *Minor fixes for non-browser environments. New alias and verb.*
+- 1.1.1 *Added `url` tagged literals (an ES6 feature).*
+- 1.1.0 *Added fetch() as an alternative default transport.*
+- 1.0.9 *Correcting typos in README. New version of a test server.*
+- 1.0.8 *Add a helper for busting browser cache.*
+- 1.0.7 *Regenerated dist.*
+- 1.0.6 *Added a helper to extract data from XHR in case of errors.*
+- 1.0.5 *XHR can be reinstated from a JSON object, not just a string.*
+- 1.0.4 *Regenerated dist.*
+- 1.0.3 *Bugfix: cache XHR object directly.*
+- 1.0.2 *Fixed formatting errors in README.*
+- 1.0.1 *Improved documentation.*
+- 1.0.0 *The initial public release as heya-io. Sunset of heya-request. Move from bitbucket.*
 
 # License
 
