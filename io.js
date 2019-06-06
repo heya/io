@@ -116,13 +116,13 @@
 		var dFlag = typeof d.progress == 'function', oFlag = typeof options.onProgress == 'function';
 		if (oFlag || dFlag) {
 			xhr.onprogress = function (event) {
-				var p = {xhr: xhr, options: options, event: event, upload: false};
+				var p = {xhr: xhr, options: options, event: event, loaded: event.loaded, total: event.total, lengthComputable: event.lengthComputable, upload: false};
 				oFlag && options.onProgress(p);
 				dFlag && d.progress(p);
 			};
 			if (xhr.upload) {
 				xhr.upload.onprogress = function (event) {
-					var p = {xhr: xhr, options: options, event: event, upload: true};
+					var p = {xhr: xhr, options: options, event: event, loaded: event.loaded, total: event.total, lengthComputable: event.lengthComputable, upload: true};
 					oFlag && options.onProgress(p);
 					dFlag && d.progress(p);
 				};
