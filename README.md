@@ -9,29 +9,36 @@
 [![devDependencies][dev-deps-image]][dev-deps-url]
 
 
-A minimal, yet flexible I/O for browser and Node with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope, including to add more transports, and I/O orchestration plugin services.
+A minimal, yet flexible I/O for browser and Node with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest),
+and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope,
+including to add more transports, and I/O orchestration plugin services.
 
 It can run on Node using a specialized transport: [heya-io-node](https://github.com/heya/io-node). It greatly simplifies I/O on Node by leveraging enhanced features of `heya-io` in the server environment.
 
 Five services are included:
 
-* `io.cache` &mdash; a transparent application-level cache (supports [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) out of the box).
-* `io.bundle` &mdash; a transparent service to bundle requests into one package passing it to a server, and unbundling a result. It requires a simple server counterpart. [heya-bundler](https://github.com/heya/bundler) is a reference implementation for node.js/express.js.
+* `io.cache` &mdash; a transparent application-level cache (supports [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and
+  [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) out of the box).
+* `io.bundle` &mdash; a transparent service to bundle requests into one package passing it to a server, and unbundling a result.
+  It requires a simple server counterpart. [heya-bundler](https://github.com/heya/bundler) is a reference implementation for node.js/express.js.
 * `io.track` &mdash; a simple plugin to track I/O requests to eliminate duplicates, register an interest without initiating I/O requests, and much more.
 * `io.mock` &mdash; a way to mock I/O requests without writing a special server courtesy of [Mike Wilcox](https://github.com/clubajax). Very useful for rapid prototyping and writing tests.
 * `io.bust` &mdash; a simple plugin to generate a randomized query value to bust browser's cache.
 
 Two additional transports are provided:
 
+* `io.fetch()` &mdash; replaces `XHR` with `fetch()`-based transport.
 * `io.jsonp()` &mdash; [JSON-P](http://json-p.org/) requests.
 * `io.load()` &mdash; generates `<script>` tags to include JavaScript files.
-* `io.fetch()` &mdash; replaces `XHR` with `fetch()`-based transport.
 
 Utilities:
 
 * `url()` &mdash; uses ES6 tagged literals to form properly sanitized URLs.
 
-As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://github.com/heya/async): [FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred). With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
+As is `heya-io` uses the standard [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+Given that not all browsers provide it, `heya-io` can be used with any then-able, but it was especially tested with implementations provided by [heya-async](https://github.com/heya/async):
+[FastDeferred](https://github.com/heya/async/wiki/async.FastDeferred) and [Deferred](https://github.com/heya/async/wiki/async.Deferred).
+With those modules an extended API is supported: I/O progress reports, and cancellation of I/O requests.
 
 # Examples
 
