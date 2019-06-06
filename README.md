@@ -225,6 +225,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.6.1 *Added extra properties to progress data.*
 - 1.6.0 *Added `options.onProgress()` and tests on Firefox Puppeteer.*
 - 1.5.0 *Added cache removal by a function.*
 - 1.4.2 *Added `ignoreBadStatus` flag when `returnXHR`.*
