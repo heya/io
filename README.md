@@ -232,6 +232,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.7.0 *Added `AbortRequest`.*
 - 1.6.2 *Added separate `options.onDownloadProgress()` and `options.onUploadProgress()`.*
 - 1.6.1 *Added extra properties to progress data.*
 - 1.6.0 *Added `options.onProgress()` and tests on Firefox Puppeteer.*

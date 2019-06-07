@@ -148,6 +148,14 @@
 		});
 		// send data, if any
 		xhr.send(io.processData(xhr, options, prep.data));
+		// set up an abort
+		if (options.signal) {
+			if (typeof options.signal.then == 'function') {
+				options.signal.then(function () { xhr.abort(); });
+			} else if (typeof options.signal.addEventListener == 'function') {
+				options.signal.addEventListener('abort', function () { xhr.abort(); });
+			}
+		}
 		return d.promise || d;
 	}
 
@@ -390,7 +398,11 @@
 		return headers;
 	}
 
-
+	function AbortRequest () {
+		var d = new io.Deferred();
+		this.promise = d.promise || d;
+		this.abort = function() { d.resolve(); };
+	}
 
 	['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'].forEach(function (verb) {
 		io[verb.toLowerCase()] = makeVerb(verb);
@@ -406,6 +418,8 @@
 	io.BadStatus = BadStatus;
 	io.Deferred  = io.FauxDeferred = FauxDeferred;
 	io.Ignore    = Ignore;
+
+	io.AbortRequest = AbortRequest;
 
 	io.prefix     = 'io-';
 	io.makeKey    = makeKey;
