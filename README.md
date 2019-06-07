@@ -15,7 +15,7 @@ including to add more transports, and I/O orchestration plugin services.
 
 It can run on Node using a specialized transport: [heya-io-node](https://github.com/heya/io-node). It greatly simplifies I/O on Node by leveraging enhanced features of `heya-io` in the server environment.
 
-Five services are included:
+The following services are included:
 
 * `io.cache` &mdash; a transparent application-level cache (supports [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) and
   [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) out of the box).
@@ -25,7 +25,7 @@ Five services are included:
 * `io.mock` &mdash; a way to mock I/O requests without writing a special server courtesy of [Mike Wilcox](https://github.com/clubajax). Very useful for rapid prototyping and writing tests.
 * `io.bust` &mdash; a simple plugin to generate a randomized query value to bust browser's cache.
 
-Two additional transports are provided:
+The following additional transports are provided:
 
 * `io.fetch()` &mdash; replaces `XHR` with `fetch()`-based transport.
 * `io.jsonp()` &mdash; [JSON-P](http://json-p.org/) requests.
@@ -73,7 +73,7 @@ heya.io.patch('/things/7', {age: 14}).then(done);
 heya.io.remove('/things/3').then(done);
 ```
 
-**Modern browsers:**
+Modern browsers:
 
 ```js
 const doIO = async query => {
