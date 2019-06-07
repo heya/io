@@ -113,20 +113,24 @@
 		xhr.ontimeout = function (event) {
 			d.reject(new io.TimedOut(xhr, options, event), true);
 		};
-		var dFlag = typeof d.progress == 'function', oFlag = typeof options.onProgress == 'function';
-		if (oFlag || dFlag) {
+		var dFlag = typeof d.progress == 'function', oFlag = typeof options.onProgress == 'function',
+			downloadFlag = typeof options.onDownloadProgress == 'function',
+			uploadFlag = typeof options.onUploadProgress == 'function';
+		if (downloadFlag || oFlag || dFlag) {
 			xhr.onprogress = function (event) {
 				var p = {xhr: xhr, options: options, event: event, loaded: event.loaded, total: event.total, lengthComputable: event.lengthComputable, upload: false};
+				downloadFlag && options.onDownloadProgress(p);
 				oFlag && options.onProgress(p);
 				dFlag && d.progress(p);
 			};
-			if (xhr.upload) {
-				xhr.upload.onprogress = function (event) {
-					var p = {xhr: xhr, options: options, event: event, loaded: event.loaded, total: event.total, lengthComputable: event.lengthComputable, upload: true};
-					oFlag && options.onProgress(p);
-					dFlag && d.progress(p);
-				};
-			}
+		}
+		if (xhr.upload && (uploadFlag || oFlag || dFlag)) {
+			xhr.upload.onprogress = function (event) {
+				var p = {xhr: xhr, options: options, event: event, loaded: event.loaded, total: event.total, lengthComputable: event.lengthComputable, upload: true};
+				uploadFlag && options.onUploadProgress(p);
+				oFlag && options.onProgress(p);
+				dFlag && d.progress(p);
+			};
 		}
 		// build a URL
 		var url = prep.url;
