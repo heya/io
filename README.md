@@ -4,10 +4,9 @@
 [![Build status][travis-image]][travis-url]
 [![NPM version][npm-image]][npm-url]
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/heya/io.svg)](https://greenkeeper.io/)
+[![Greenkeeper][greenkeeper-image]][greenkeeper-url]
 [![Dependencies][deps-image]][deps-url]
 [![devDependencies][dev-deps-image]][dev-deps-url]
-
 
 A minimal, yet flexible I/O for browser and Node with promises. A thin wrapper on top of [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest),
 and [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), with numerous callbacks to simplify and automate all aspects of I/O especially using [JSON](http://www.json.org/) as an envelope,
@@ -272,11 +271,13 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 BSD or AFL &mdash; your choice.
 
 
-[npm-image]:      https://img.shields.io/npm/v/heya-io.svg
-[npm-url]:        https://npmjs.org/package/heya-io
-[deps-image]:     https://img.shields.io/david/heya/io.svg
-[deps-url]:       https://david-dm.org/heya/io
-[dev-deps-image]: https://img.shields.io/david/dev/heya/io.svg
-[dev-deps-url]:   https://david-dm.org/heya/io?type=dev
-[travis-image]:   https://img.shields.io/travis/heya/io.svg
-[travis-url]:     https://travis-ci.org/heya/io
+[npm-image]:         https://img.shields.io/npm/v/heya-io.svg
+[npm-url]:           https://npmjs.org/package/heya-io
+[deps-image]:        https://img.shields.io/david/heya/io.svg
+[deps-url]:          https://david-dm.org/heya/io
+[dev-deps-image]:    https://img.shields.io/david/dev/heya/io.svg
+[dev-deps-url]:      https://david-dm.org/heya/io?type=dev
+[travis-image]:      https://img.shields.io/travis/heya/io.svg
+[travis-url]:        https://travis-ci.org/heya/io
+[greenkeeper-image]: https://badges.greenkeeper.io/heya/io.svg
+[greenkeeper-url]:   https://greenkeeper.io/
