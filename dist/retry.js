@@ -1,4 +1,4 @@
-(function(_,f){window.heya.io.retry=f(window.heya.io,window.heya.io.scaffold);})
+(function(_,f){f(window.heya.io,window.heya.io.scaffold);})
 (['./io', './scaffold'], function (io, scaffold) {
 	'use strict';
 
@@ -11,28 +11,28 @@
 
 		// pass the request, and retry conditionally
 		var retries = options.retries,
-			isFailed = typeof options.isFailed == 'function' ? options.isFailed : allowOnly2XX,
+			continueRetries = typeof options.continueRetries == 'function' ? options.continueRetries : continueRetriesIfNot2XX,
 			currentRetry = 0,
 			delayMs = io.retry.initDelay;
 
-		if (retries > 1) return io.request(options, prep, level - 1).then(loop);
-		if (isFailed) return io.request(options, prep, level - 1).then(condLoop);
+		if (retries > 0) return io.request(options, prep, level - 1).then(loop);
+		if (continueRetries) return io.request(options, prep, level - 1).then(condLoop);
 		return null;
 
 		function loop(xhr) {
 			++currentRetry;
-			if (--retries >= 0 && (!isFailed || isFailed(xhr, currentRetry, options))) {
+			if (--retries >= 0 && (!continueRetries || continueRetries(xhr, currentRetry, options))) {
 				delayMs = io.retry.nextDelay(delayMs, currentRetry, options);
-				return delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(loop);
+				return io.retry.delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(loop);
 			}
 			return xhr;
 		}
 
 		function condLoop(xhr) {
 			++currentRetry;
-			if (isFailed(xhr, currentRetry, options)) {
+			if (continueRetries(xhr, currentRetry, options)) {
 				delayMs = io.retry.nextDelay(delayMs, currentRetry, options);
-				return delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(condLoop);
+				return io.retry.delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(condLoop);
 			}
 			return xhr;
 		}
@@ -44,7 +44,7 @@
 		return d.promise || d;
 	}
 
-	function allowOnly2XX (xhr) { return xhr.status < 200 || xhr.status >= 300; }
+	function continueRetriesIfNot2XX (xhr) { return xhr.status < 200 || xhr.status >= 300; }
 
 	function defaultOptIn (options) { return !options.transport; }
 

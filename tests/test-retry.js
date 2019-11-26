@@ -45,7 +45,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 3,
-				isFailed: function () { ++counter; return true; }
+				continueRetries: function () { ++counter; return true; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 3'));
@@ -57,7 +57,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 5,
-				isFailed: function (xhr, retries) { ++counter; return retries < 2; }
+				continueRetries: function (xhr, retries) { ++counter; return retries < 2; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 2'));
@@ -69,7 +69,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 0,
-				isFailed: function (xhr, retries) { ++counter; return retries < 2; }
+				continueRetries: function (xhr, retries) { ++counter; return retries < 2; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 2'));

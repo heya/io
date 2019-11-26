@@ -23,6 +23,7 @@ The following services are included:
 * `io.track` &mdash; a simple plugin to track I/O requests to eliminate duplicates, register an interest without initiating I/O requests, and much more.
 * `io.mock` &mdash; a way to mock I/O requests without writing a special server courtesy of [Mike Wilcox](https://github.com/clubajax). Very useful for rapid prototyping and writing tests.
 * `io.bust` &mdash; a simple plugin to generate a randomized query value to bust browser's cache.
+* `io.retry` &mdash; a plugin to retry unreliable services or watch changes over time.
 
 The following additional transports are provided:
 
@@ -231,6 +232,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.9.0 *Bugfixes and refactoring in the `retry` service.*
 - 1.8.0 *Added `retry` service. Thx [Jason Vanderslice](https://github.com/jasonvanderslice)!*
 - 1.7.1 *Refreshed dev dependencies.*
 - 1.7.0 *Added `AbortRequest`.*

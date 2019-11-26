@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Intelligent I/O for browsers and Node.",
   "main": "main.js",
   "directories": {
@@ -22,7 +22,8 @@
   "keywords": [
     "I/O",
     "XHR",
-    "IO"
+    "IO",
+    "fetch"
   ],
   "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://www.lazutkin.com/)",
   "license": "BSD-3-Clause",
@@ -49,6 +50,7 @@
     "./cache": "!heya.io",
     "./bundle": "!heya.io",
     "./bust": "!heya.io",
-    "./fetch": "!heya.io"
+    "./fetch": "!heya.io",
+    "./retry": "!heya.io"
   }
 }
