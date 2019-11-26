@@ -72,5 +72,5 @@
 
 		deferred: {}
 	};
-	return scaffold(io, 'track', 30, track);
+	return scaffold(io, 'track', 40, track);
 });

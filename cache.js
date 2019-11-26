@@ -139,5 +139,5 @@ define(['./io', './FauxXHR', './scaffold'], function (io, FauxXHR, scaffold) {
 		makeStorage: makeStorage,
 		storage:     makeStorage('sessionStorage')
 	};
-	return scaffold(io, 'cache', 40, cache);
+	return scaffold(io, 'cache', 50, cache);
 });

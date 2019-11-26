@@ -55,5 +55,5 @@ define(['./io', './scaffold'], function (io, scaffold) {
 		nextDelay: function (delay, retry, options) { return delay; },
 		defaultOptIn: defaultOptIn
 	};
-	return scaffold(io, 'retry', 25, retry);
+	return scaffold(io, 'retry', 30, retry);
 });
