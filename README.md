@@ -231,6 +231,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.8.0 *Added `retry` service. Thx [Jason Vanderslice](https://github.com/jasonvanderslice)!*
 - 1.7.1 *Refreshed dev dependencies.*
 - 1.7.0 *Added `AbortRequest`.*
 - 1.6.2 *Added separate `options.onDownloadProgress()` and `options.onUploadProgress()`.*
