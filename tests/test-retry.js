@@ -52,12 +52,24 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 				x.done();
 			});
 		},
+		function test_cond_retry_counter_term_by_func (t) {
+			var x = t.startAsync(), counter = 0;
+			io({
+				url: 'http://localhost:3000/xxx', // doesn't exist
+				retries: 5,
+				isFailed: function (xhr, retries) { ++counter; return retries < 2; }
+			}).catch(function (error) {
+				eval(t.TEST('error.xhr.status === 404'));
+				eval(t.TEST('counter === 2'));
+				x.done();
+			});
+		},
 		function test_cond_retry_failure (t) {
 			var x = t.startAsync(), counter = 0;
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 0,
-				isFailed: function (error, retries) { ++counter; return retries < 2; }
+				isFailed: function (xhr, retries) { ++counter; return retries < 2; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 2'));
