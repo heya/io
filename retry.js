@@ -3,12 +3,6 @@ define(['./io', './scaffold'], function (io, scaffold) {
 
 	// implement retries for unreliable I/O requests
 
-	function delay (ms) {
-		var d = new io.Deferred();
-		setTimeout(function () { d.resolve(ms); }, ms);
-		return d.promise || d;
-	}
-
 	function retry (options, prep, level) {
 		if (typeof options.retries != 'number' || !io.retry.optIn(options)) {
 			return null;
@@ -16,16 +10,12 @@ define(['./io', './scaffold'], function (io, scaffold) {
 
 		// pass the request, and retry conditionally
 		var retries = options.retries,
-			isFailed = typeof options.isFailed == 'function' ? options.isFailed : null,
+			isFailed = typeof options.isFailed == 'function' ? options.isFailed : allowOnly2XX,
 			currentRetry = 0,
 			delayMs = io.retry.initDelay;
 
-		if (retries > 1) {
-			return io.request(options, prep, level - 1).then(loop);
-		}
-		if (isFailed) {
-			return io.request(options, prep, level - 1).then(condLoop);
-		}
+		if (retries > 1) return io.request(options, prep, level - 1).then(loop);
+		if (isFailed) return io.request(options, prep, level - 1).then(condLoop);
 		return null;
 
 		function loop(xhr) {
@@ -47,9 +37,17 @@ define(['./io', './scaffold'], function (io, scaffold) {
 		}
 	}
 
-	// export
+	function delay (ms) {
+		var d = new io.Deferred();
+		setTimeout(function () { d.resolve(ms); }, ms);
+		return d.promise || d;
+	}
+
+	function allowOnly2XX (xhr) { return xhr.status < 200 || xhr.status >= 300; }
 
 	function defaultOptIn (options) { return !options.transport; }
+
+	// export
 
 	io.retry = {
 		delay: delay,
