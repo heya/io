@@ -232,6 +232,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.9.1 *Minor improvements of the `retry` service.*
 - 1.9.0 *Bugfixes and refactoring in the `retry` service.*
 - 1.8.0 *Added `retry` service. Thx [Jason Vanderslice](https://github.com/jasonvanderslice)!*
 - 1.7.1 *Refreshed dev dependencies.*

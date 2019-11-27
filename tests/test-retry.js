@@ -57,7 +57,7 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 5,
-				continueRetries: function (xhr, retries) { ++counter; return retries < 2; }
+				continueRetries: function (result, retries) { ++counter; return retries < 2; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 2'));
@@ -69,10 +69,23 @@ define(['module', 'heya-unit', 'heya-io/io', 'heya-io/retry'], function (module,
 			io({
 				url: 'http://localhost:3000/xxx', // doesn't exist
 				retries: 0,
-				continueRetries: function (xhr, retries) { ++counter; return retries < 2; }
+				continueRetries: function (result, retries) { ++counter; return retries < 2; }
 			}).catch(function (error) {
 				eval(t.TEST('error.xhr.status === 404'));
 				eval(t.TEST('counter === 2'));
+				x.done();
+			});
+		},
+		function test_retry_local (t) {
+			var x = t.startAsync(), counter = 0;
+			io({
+				url: 'http://localhost:3000/xxx', // doesn't exist
+				retries: 3,
+				initDelay: 20,
+				nextDelay: function (delay) { ++counter; return 2 * delay; }
+			}).catch(function (error) {
+				eval(t.TEST('error.xhr.status === 404'));
+				eval(t.TEST('counter === 3'));
 				x.done();
 			});
 		},
