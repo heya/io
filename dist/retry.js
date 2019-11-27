@@ -12,29 +12,28 @@
 		// pass the request, and retry conditionally
 		var retries = options.retries,
 			continueRetries = typeof options.continueRetries == 'function' ? options.continueRetries : continueRetriesIfNot2XX,
-			currentRetry = 0,
-			delayMs = io.retry.initDelay;
+			nextDelay = typeof options.nextDelay == 'function' ? options.nextDelay : io.retry.nextDelay,
+			delayMs = typeof options.initDelay == 'number' ? options.initDelay : io.retry.initDelay,
+			currentRetry = 0;
 
-		if (retries > 0) return io.request(options, prep, level - 1).then(loop);
-		if (continueRetries) return io.request(options, prep, level - 1).then(condLoop);
-		return null;
+		return io.request(options, prep, level - 1).then(retries > 0 ? loop : condLoop);
 
-		function loop(xhr) {
+		function loop(result) {
 			++currentRetry;
-			if (--retries >= 0 && (!continueRetries || continueRetries(xhr, currentRetry, options))) {
-				delayMs = io.retry.nextDelay(delayMs, currentRetry, options);
+			if (--retries >= 0 && continueRetries(result, currentRetry)) {
+				delayMs = nextDelay(delayMs, currentRetry, options);
 				return io.retry.delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(loop);
 			}
-			return xhr;
+			return result;
 		}
 
-		function condLoop(xhr) {
+		function condLoop(result) {
 			++currentRetry;
-			if (continueRetries(xhr, currentRetry, options)) {
-				delayMs = io.retry.nextDelay(delayMs, currentRetry, options);
+			if (continueRetries(result, currentRetry)) {
+				delayMs = nextDelay(delayMs, currentRetry, options);
 				return io.retry.delay(delayMs).then(function() { return io.request(options, prep, level - 1); }).then(condLoop);
 			}
-			return xhr;
+			return result;
 		}
 	}
 
@@ -44,7 +43,7 @@
 		return d.promise || d;
 	}
 
-	function continueRetriesIfNot2XX (xhr) { return xhr.status < 200 || xhr.status >= 300; }
+	function continueRetriesIfNot2XX (result) { return result.xhr && (result.xhr.status < 200 || result.xhr.status >= 300); }
 
 	function defaultOptIn (options) { return !options.transport; }
 
@@ -56,5 +55,5 @@
 		nextDelay: function (delay, retry, options) { return delay; },
 		defaultOptIn: defaultOptIn
 	};
-	return scaffold(io, 'retry', 25, retry);
+	return scaffold(io, 'retry', 30, retry);
 });
