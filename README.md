@@ -232,6 +232,7 @@ The server runs indefinitely, and can be stopped by Ctrl+C.
 
 # Versions
 
+- 1.9.2 *Switched `retry` to the UMD loader so it can be used in Node directly.*
 - 1.9.1 *Minor improvements of the `retry` service.*
 - 1.9.0 *Bugfixes and refactoring in the `retry` service.*
 - 1.8.0 *Added `retry` service. Thx [Jason Vanderslice](https://github.com/jasonvanderslice)!*

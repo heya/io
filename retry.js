@@ -1,4 +1,5 @@
-define(['./io', './scaffold'], function (io, scaffold) {
+/* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
+(['./io', './scaffold'], function (io, scaffold) {
 	'use strict';
 
 	// implement retries for unreliable I/O requests
