@@ -38,7 +38,7 @@
     "heya-bundler": "^1.1.2",
     "heya-globalize": "^1.2.1",
     "heya-unit": "^0.3.0",
-    "puppeteer": "^2.0.0",
+    "puppeteer": "^3.0.0",
     "puppeteer-firefox": "^0.5.0"
   },
   "browserGlobals": {
