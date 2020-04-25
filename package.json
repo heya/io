@@ -1,6 +1,6 @@
 {
   "name": "heya-io",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "Intelligent I/O for browsers and Node.",
   "main": "main.js",
   "directories": {
@@ -38,8 +38,8 @@
     "heya-bundler": "^1.1.2",
     "heya-globalize": "^1.2.1",
     "heya-unit": "^0.3.0",
-    "puppeteer": "^2.0.0",
-    "puppeteer-firefox": "^0.5.0"
+    "puppeteer": "^3.0.1",
+    "puppeteer-firefox": "^0.5.1"
   },
   "browserGlobals": {
     "!root": "heya.io",
